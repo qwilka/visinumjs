@@ -1,0 +1,25 @@
+{
+  "name": "visinum",
+  "version": "0.1.0",
+  "description": "A project to improve engineering computational productivity.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qwilka/visinumjs.git"
+  },
+  "keywords": [
+    "science",
+    "engineering",
+    "computational",
+    "productivity"
+  ],
+  "author": "Stephen McEntee",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qwilka/visinumjs/issues"
+  },
+  "homepage": "https://github.com/qwilka/visinumjs#readme"
+}
