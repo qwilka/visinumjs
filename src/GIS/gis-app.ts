@@ -1,9 +1,14 @@
 
 import * as L from 'leaflet';
 import '../../node_modules/leaflet/dist/leaflet.css';
-import { LatLonEllipsoidal as geodesyLatLon } from 'geodesy';
+//import { LatLonEllipsoidal as geodesyLatLon } from 'geodesy';
+import { LatLonEllipsoidal as LatLon } from 'geodesy';
+//import { Utm } from 'geodesy';
 
-//import * as mapData from './map-data';
+import * as mapData from './map-data';
+
+//import * as $ from 'jquery';
+import $ from 'jquery';
 
 
 export function setupGisMap(gisMapObj) {
@@ -58,22 +63,82 @@ export function setupGisMap(gisMapObj) {
     scale.addTo(map);
 
     function onMapRightClick(evt) {
-        let lat = evt.latlng.lat;
-        let long = evt.latlng.lng;
-        let glatlong = new geodesyLatLon(lat, long);
-        let utmCoord = glatlong.toUtm();
+        let X = map.layerPointToContainerPoint(evt.layerPoint).x;
+        let Y = map.layerPointToContainerPoint(evt.layerPoint).y;
+        let size = map.getSize() 
+        let params = {
+          request: 'GetFeatureInfo',
+          service: 'WMS',
+          srs: 'EPSG:4326',
+          version: '1.1.1',      
+          bbox: map.getBounds().toBBoxString(),
+          format: mapData.GebcoObj.options.format,
+          x: X,
+          y: Y,
+          height: size.y,
+          width: size.x,
+          layers: 'GEBCO_LATEST_2',
+          query_layers: 'GEBCO_LATEST_2',
+          info_format: 'text/html'
+        };
+        let featInfoUrl = mapData.GebcoObj.baseUrl + L.Util.getParamString(params, mapData.GebcoObj.baseUrl, true)
+        let getinfo = $.ajax({
+            url: featInfoUrl,
+            dataType: "html",
+            success: function (xhr) { console.log(xhr.statusText);},
+            error: function (xhr) { console.log(xhr.statusText); }
+            })
+        $.when(getinfo).done(function() {
+                    let htmlstr = $.parseHTML( getinfo.responseText );
+                    //var body = $(htmlstr).find('body:first');
+                    let body = $(htmlstr).find('body:first');
+                    $.each(htmlstr, function(i, el){
+                        //console.log(i, el)
+                        if (el.nodeName == '#text') {
+                            let targetStr: any = el.nodeValue
+                            console.log(i, targetStr);
+                            let test = targetStr.match(/Elevation value \(m\):\s*(-?\d+)/)
+                            if (test) {
+                                let elevation = test[1];
+                                if (elevation>=0) {
+                                    pustr += "<br>elevation " + elevation + " m (GEBCO)";
+                                } else {
+                                    pustr += "<br>depth " + elevation + " m (GEBCO)";
+                                }
+                                //pustr += "<br>elevation/depth " + elevation + " m (GEBCO)"
+                                console.log("elevation=", elevation)
+                                popup.setContent(pustr)
+                            }
+                            // var loc1 = targetStr.search("(m)");
+                            // var loc2 = targetStr.search("Derived");
+                            // if (loc > 0) {
+                            //     console.log("loc=", loc)
+                            //     console.log(target.slice(loc+20, loc+25))
+                            // }
+                        }
+            });
+            // parser = new DOMParser();
+            // doc = parser.parseFromString(htmlstr, "text/html");
+            //var body = $("body",$(htmlstr)).html();
+            //console.log(body);
+        });
+
+        let lat = evt.latlng.lat
+        let long = evt.latlng.lng
+        let latlong_WGS84 = new LatLon(lat, long, LatLon.datum.WGS84);
+        let latlong_ED50 = latlong_WGS84.convertDatum(LatLon.datum.ED50);
+        let utmCoord = latlong_ED50.toUtm();
         let pustr = "Location coordinates:";
-        pustr += `<br>long. ${(long).toFixed(2)}&deg; lat. ${(lat).toFixed(2)}&deg;`;
-        pustr += `<br>UTM zone ${utmCoord.zone}${utmCoord.hemisphere}`;
-        pustr += `<br>E${(utmCoord.easting).toFixed(3)} N${(utmCoord.northing).toFixed(3)}`;
-        //pustr += '<br><font color="green"><a href=_testfunc1>Fire test function1 in app</a></font>';
+        pustr += "<br>long. " + (long).toFixed(5) + "&deg;  lat. " + (lat).toFixed(5) + "&deg; (WGS84)";
+        pustr += "<br>UTM zone " + utmCoord.zone + utmCoord.hemisphere;
+        pustr += "<br>E" + (utmCoord.easting).toFixed(1) + " N" + (utmCoord.northing).toFixed(1) + " (ED50)";
         let popup = L.popup();
         popup
             .setLatLng(evt.latlng)
             .setContent(pustr)
             .openOn(map);
     }
-    map.on('contextmenu',onMapRightClick);
+    map.on('contextmenu', onMapRightClick);
 
     return [map, mapDiv];
 }
