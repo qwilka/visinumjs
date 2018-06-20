@@ -1,0 +1,39 @@
+
+
+
+
+webpack
+=======
+https://stackoverflow.com/questions/43595555/webpack-cant-resolve-typescript-modules
+https://github.com/kinotto/node-typescript-webpack-starter
+
+
+Leaflet
+=======
+https://stackoverflow.com/questions/43217637/basic-leaflet-example-not-showing-anything-in-the-browser
+https://stackoverflow.com/questions/36355365/map-is-not-rendering-in-leafletjs-getting-blank-page-no-errors
+not used:
+https://github.com/oardi/leaflet-typescript-template
+http://www.solasistim.net/posts/vue_leaflet_typescript/
+
+
+https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests
+
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+    <title>Qwilka Subsea GIS</title>
+    <meta charset="utf-8">
+    <!-- https://stackoverflow.com/questions/36355365/map-is-not-rendering-in-leafletjs-getting-blank-page-no-errors -->
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0;}
+        #map { height: 100% }
+    </style>
+    <script src="/build/bundle.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>
