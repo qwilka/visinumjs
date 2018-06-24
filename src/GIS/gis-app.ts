@@ -49,14 +49,33 @@ export function setupGisMap(gisMapObj) {
             if (layerObj.show) map.addLayer(tilelayer);
         } );
     }
+
+    // let title: any = new L.Control();   // L.control();
+    // title.onAdd = function(map) {
+    //     this._div = L.DomUtil.create('div', 'ctl title');
+    //     this.update();
+    //     return this._div;
+    // };
+    // title.update = function(props) {
+    //     this._div.innerHTML = '<div style="font-family:Arial">Qwilka Subsea GIS</div> \
+    //     <div align="middle" style="font-family:Arial;font-size:small"><a target="_blank" href="https://qwilka.github.io/blog/2018/04/19/introducing-qwilka-gis">about</a></div>';
+    // };
+    // title.addTo(map);
+
     let layerControl = L.control.layers(baseMaps, overlayMaps, { 
         collapsed: true, 
         autoZIndex: true 
     })
     layerControl.addTo(map);
 
+    let attribut = L.control.attribution({ 
+        position: 'bottomright', 
+        prefix: '<a target="_blank" href="https://qwilka.github.io/blog/2018/04/19/introducing-qwilka-gis">About Visinum GIS</a>'
+    });
+    attribut.addTo(map);
+
     let scale = L.control.scale({ 
-        position: 'bottomleft', 
+        position: 'bottomright', 
         metric: true, 
         imperial: false 
     });
@@ -90,13 +109,11 @@ export function setupGisMap(gisMapObj) {
             })
         $.when(getinfo).done(function() {
                     let htmlstr = $.parseHTML( getinfo.responseText );
-                    //var body = $(htmlstr).find('body:first');
                     let body = $(htmlstr).find('body:first');
                     $.each(htmlstr, function(i, el){
-                        //console.log(i, el)
                         if (el.nodeName == '#text') {
                             let targetStr: any = el.nodeValue
-                            console.log(i, targetStr);
+                            // console.log(i, targetStr);
                             let test = targetStr.match(/Elevation value \(m\):\s*(-?\d+)/)
                             if (test) {
                                 let elevation = test[1];
@@ -105,24 +122,12 @@ export function setupGisMap(gisMapObj) {
                                 } else {
                                     pustr += "<br>depth " + elevation + " m (GEBCO)";
                                 }
-                                //pustr += "<br>elevation/depth " + elevation + " m (GEBCO)"
-                                console.log("elevation=", elevation)
+                                // console.log("elevation=", elevation)
                                 popup.setContent(pustr)
                             }
-                            // var loc1 = targetStr.search("(m)");
-                            // var loc2 = targetStr.search("Derived");
-                            // if (loc > 0) {
-                            //     console.log("loc=", loc)
-                            //     console.log(target.slice(loc+20, loc+25))
-                            // }
                         }
             });
-            // parser = new DOMParser();
-            // doc = parser.parseFromString(htmlstr, "text/html");
-            //var body = $("body",$(htmlstr)).html();
-            //console.log(body);
         });
-
         let lat = evt.latlng.lat
         let long = evt.latlng.lng
         let latlong_WGS84 = new LatLon(lat, long, LatLon.datum.WGS84);

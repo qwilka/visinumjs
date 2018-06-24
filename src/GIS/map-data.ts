@@ -14,7 +14,6 @@ export let GebcoObj = {
         CRS: "EPSG:4326",
         version: '1.1.1',
         format: "image/png",
-        maxZoom: 12,
         noWrap: true,
         transparent: false,
         opacity: 0.7,
@@ -28,14 +27,12 @@ export let OsmObj = {
     source: "WMS",
     type: "BASEMAP",
     ref: ["http://ows.terrestris.de/", "https://www.openstreetmap.org/copyright"],
-    GetCapabilities: "http://ows.terrestris.de/osm/service?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities",
     baseUrl: "http://ows.terrestris.de/osm/service",
     options: {
         layers: "TOPO-OSM-WMS",
         CRS: "EPSG:4326",
         version: '1.1.1',
         format: "image/png",
-        maxZoom: 12,
         noWrap: true,
         transparent: false,
         opacity: 0.7,
@@ -53,7 +50,7 @@ export let WhitebgObj = {
 
 
 export let NpdObj = {
-    title: "NPD",
+    title: "Norway NPD pipelines",
     source: "WMS",
     type: "OVERLAY",
     ref: ["http://npdwms.npd.no/"],
@@ -71,7 +68,83 @@ export let NpdObj = {
     }
 };
 
+export let IREobj = {
+    title: "Ireland pipelines",
+    source: "WMS",
+    type: "OVERLAY",
+    ref: ["https://data.gov.ie/dataset/offshore-gas-pipeline"],
+    baseUrl: "http://atlas.marine.ie/arcgis/services/EnergyResourcesInfrastructure/MapServer/WMSServer",
+    options: {
+        layers: '1,2,3',
+        CRS: "EPSG:4326",
+        format: "image/png",
+        transparent: true,
+        noWrap: true,
+        opacity: 1.0,
+        attribution: '<a target="_blank" href="https://data.gov.ie/dataset/offshore-gas-pipeline">IE-GovData</a> <a href="https://creativecommons.org/licenses/by/4.0/">(CC BY 4.0)</a>'
+    }
+};
 
+export let MarScoFishobj = {
+    title: "Marine Scotland (fishing activity)",
+    source: "WMS",
+    type: "OVERLAY",
+    ref: ["http://marine.gov.scot/maps/1529", 
+        "http://marine.gov.scot/maps/515",
+        "http://www.gov.scot/Topics/marine/seamanagement/nmpihome/wms-wfs"
+    ],
+    baseUrl: "http://msmap1.atkinsgeospatial.com/geoserver/nmpwfs/ows",
+    options: {
+        layers: 'utility_and_government_services_fishing_intensity_pipelines_all_gears',
+        CRS: "EPSG:3857",
+        format: "image/png",
+        transparent: true,
+        noWrap: true,
+        opacity: 0.9,
+        token: "d46ffd2a-e192-4e51-8a6a-b3292c20f1ee",
+        attribution: '<a target="_blank" href="http://marine.gov.scot/maps/1529">&copy; Crown Copyright (ScotGov)</a>'
+    }
+};
+
+export let MarScoFishObj = {
+    title: "Marine Scotland (fishing activity)",
+    source: "WMS",
+    type: "OVERLAY",
+    ref: ["http://marine.gov.scot/maps/1529", 
+        "http://marine.gov.scot/maps/515",
+        "http://www.gov.scot/Topics/marine/seamanagement/nmpihome/wms-wfs"
+    ],
+    baseUrl: "http://msmap1.atkinsgeospatial.com/geoserver/nmpwfs/ows",
+    options: {
+        layers: 'utility_and_government_services_fishing_intensity_pipelines_all_gears',
+        CRS: "EPSG:3857",
+        version: '1.3.0',
+        format: "image/png",
+        transparent: true,
+        noWrap: true,
+        opacity: 0.9,
+        attribution: '<a target="_blank" href="http://marine.gov.scot/maps/1529">&copy; Crown Copyright (ScotGov)</a>'
+    }
+};
+
+export let EezObj = {
+    title: "Exclusive Economic Zones",
+    source: "WMS",
+    type: "OVERLAY",
+    ref: ["http://www.marineregions.org/webservices.php", 
+        "https://www.naturalearthdata.com/"
+    ],
+    baseUrl: "http://geo.vliz.be:80/geoserver/MarineRegions/wms",
+    options: {
+        layers: 'MarineRegions:eez_boundaries',
+        version: '1.1.1',
+        format: "image/png",
+        transparent: true,
+        noWrap: true,
+        opacity: 0.9,
+        attribution: '<a target="_blank" href="http://www.marineregions.org">FlandersMarineInst (CC-BY-NC-SA)</a>'
+    }
+};
 
 
 

@@ -11,13 +11,21 @@ import * as mapData from './GIS/map-data';
 window.onload = () => {
     console.log("window.onload");
     let gisMapObj = {
-        title: "North Sea",
-        layers: [{...mapData.GebcoObj, show:true}, mapData.OsmObj, mapData.WhitebgObj, mapData.NpdObj],
+        title: "Europe – North Sea",
+        layers: [{...mapData.GebcoObj, show:true}, 
+            mapData.OsmObj, 
+            mapData.WhitebgObj, 
+            mapData.NpdObj,
+            mapData.IREobj,
+            mapData.MarScoFishobj
+        ],
         options: {
             center: [58.80, 2.5],
             zoom: 5,
+            minZoom: 2,
+            maxZoom: 14,
             trackResize: true, 
-            attributionControl: true           
+            attributionControl: false           
         }
     }
     gisApp.setupGisMap(gisMapObj);
