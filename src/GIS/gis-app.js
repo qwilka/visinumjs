@@ -10,16 +10,64 @@ import * as mapData from './map-data';
 //import * as $ from 'jquery';
 import $ from 'jquery';
 
+import '../libs/jquery.slidereveal';
+
+import 'jquery.fancytree';
+import 'jquery.fancytree/dist/skin-lion/ui.fancytree.css';
+
 
 export function setupGisMap(gisMapObj) {
+    let docBody = document.getElementsByTagName("BODY")[0];
+    let sideBarId = "sidebar";
+    let sideBar = document.createElement('div');
+    sideBar.setAttribute("id", sideBarId);
+    // sideBar.setAttribute("width", "50%");
+    // sideBar.setAttribute("push", true);
+    sideBar.innerHTML = "test slider!";
+    docBody.appendChild(sideBar);
+
+    let sidebarSearchBox = document.createElement('input');
+    sidebarSearchBox.type = "text";
+    sidebarSearchBox.id = "sidebar-searchbox";
+    sidebarSearchBox.placeholder = "(doesn't do anything yet...)";
+    sideBar.appendChild(sidebarSearchBox);
+
+    let datatreeId = "datatree";
+    let dataTree = document.createElement('div');
+    dataTree.setAttribute("id", datatreeId);
+    sideBar.appendChild(dataTree);
+    $("#datatree").fancytree({
+      source: {
+        url: "/resources/ajax-tree-fs.json",
+        dataType: "json",
+        cache: false      
+      }
+    });
+    var pars = {
+        vn_uri: "NOR::SKARV::SUBSEA",
+        treename: "ast",
+        max_time_ms: 3000
+    };
+    var queryString = $.param(pars);
+    console.log("http://localhost:8080/api/v1/visinum/dataset/treename?" + queryString);
+    // https://stackoverflow.com/questions/32126938/parse-string-having-key-value-pairs-as-json/32127023#32127023
+    // let ipstr = document.getElementById(sidebarSearchBox).value
+    // let jsonStr2 = '{"' + ipstr.replace(/ /g, '", "').replace(/=/g, '": "') + '"}';
+    // let ipObj = JSON.parse(jsonStr2)
+    // console.log(ipObj)
+
     let mapDivId = "map";
     let mapDiv = document.createElement('div');
     mapDiv.setAttribute("id", mapDivId);
     mapDiv.setAttribute("src", "");
     // https://stackoverflow.com/questions/36355365/map-is-not-rendering-in-leafletjs-getting-blank-page-no-errors
     mapDiv.setAttribute("style", "width: 100%; height: 100%; margin: 0 auto;");
-    let docBody = document.getElementsByTagName("BODY")[0];
+    // let docBody = document.getElementsByTagName("BODY")[0];
     docBody.appendChild(mapDiv);
+
+    $('#sidebar').slideReveal({
+        "width": "30%"
+    });
 
     let map = L.map(mapDiv, gisMapObj.options);    
 
@@ -112,7 +160,7 @@ export function setupGisMap(gisMapObj) {
                     let body = $(htmlstr).find('body:first');
                     $.each(htmlstr, function(i, el){
                         if (el.nodeName == '#text') {
-                            let targetStr: any = el.nodeValue
+                            let targetStr = el.nodeValue
                             // console.log(i, targetStr);
                             let test = targetStr.match(/Elevation value \(m\):\s*(-?\d+)/)
                             if (test) {
