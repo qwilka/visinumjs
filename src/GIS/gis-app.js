@@ -1,197 +1,337 @@
+/*
+Copyright © 2017 Qwilka Limited. All rights reserved.
+Any unauthorised copying or distribution is strictly prohibited.
+Author: Stephen McEntee <stephenmce@gmail.com>
+*/
+import { BoxPanel } from '@phosphor/widgets';
 
+// https://github.com/calvinmetcalf/leaflet-ajax/issues/49
+// npm install --save leaflet@1.0.3
 import * as L from 'leaflet';
+import '../../libs/leaflet.ajax.min';
+
+import { LatLonEllipsoidal as geodesyLatLon } from 'geodesy';
+
+import * as KDBUSH from 'kdbush';
 import '../../node_modules/leaflet/dist/leaflet.css';
-//import { LatLonEllipsoidal as geodesyLatLon } from 'geodesy';
-import { LatLonEllipsoidal as LatLon } from 'geodesy';
-//import { Utm } from 'geodesy';
 
 import * as mapData from './map-data';
 
-//import * as $ from 'jquery';
-import $ from 'jquery';
+// export let gisPanel = new BoxPanel();
+// gisPanel.title.label = 'GIS';
+// let gisMap;
 
-import '../libs/jquery.slidereveal';
+var _gisMapDivIndex;
+let mapRefList = [];
 
-import 'jquery.fancytree';
-import 'jquery.fancytree/dist/skin-lion/ui.fancytree.css';
+export function createGisPanel(region) {
+    //if (!region) region = "North Sea";
+    let gisMapObj;
+    switch (region) {
+        case "North-Sea-region":
+            gisMapObj = mapData.northseaMapObj;
+            break;
+        case "Skarv-region":
+            gisMapObj = mapData.skarvMapObj;
+            break;
+        case "Valhall-region":
+            gisMapObj = mapData.valhallMapObj;
+            break;
+        case "Alvheim-region":
+            gisMapObj = mapData.alvheimMapObj;
+            break;
+        default:
+            gisMapObj = {
+                title: "North Sea",
+                layers: [Object.assign({"show":true}, mapData.NpdObj)],
+                center: [58.80, 2.5],
+                zoom: 5
+            }
+            break;
+    }
+    let gisPanel = new BoxPanel();
+    gisPanel.title.closable = true;
+    if (gisMapObj.hasOwnProperty('title')) {
+        gisPanel.title.label = 'GIS-' + gisMapObj.title;
+    } else {
+        gisPanel.title.label = 'GIS';
+    }
+    if (_gisMapDivIndex === undefined) _gisMapDivIndex=0;
+    let _mapDivId = "gis-map-" + _gisMapDivIndex++;  // _gisMapDivIndex initialised in index.ts
+    console.log("_mapDivId=", _mapDivId);
+    //gisPanel.mapDivId = _mapDivId;
+    let mapDiv = document.getElementById(_mapDivId);
+    let gisMap;
+    [gisMap, mapDiv] = setupGisMap(gisMapObj, _mapDivId);
+    mapRefList.push(gisMap);
+    gisPanel.node.appendChild(mapDiv);
+    return gisPanel;
+}
 
 
-export function setupGisMap(gisMapObj) {
-    let docBody = document.getElementsByTagName("BODY")[0];
-    let sideBarId = "sidebar";
-    let sideBar = document.createElement('div');
-    sideBar.setAttribute("id", sideBarId);
-    // sideBar.setAttribute("width", "50%");
-    // sideBar.setAttribute("push", true);
-    sideBar.innerHTML = "test slider!";
-    docBody.appendChild(sideBar);
 
-    let sidebarSearchBox = document.createElement('input');
-    sidebarSearchBox.type = "text";
-    sidebarSearchBox.id = "sidebar-searchbox";
-    sidebarSearchBox.placeholder = "(doesn't do anything yet...)";
-    sideBar.appendChild(sidebarSearchBox);
+export function loadGisMap(gisMapObj) {
+    let gisMapDiv_id = "gis-map";
+    let mapDiv = document.getElementById(gisMapDiv_id);
+    if (mapDiv) {
+        gisPanel.node.removeChild(mapDiv);
+        mapDiv = null;
+        gisMap = null;
+    }
+    //let layers = [mapData.NpdObj];
+    //let layers = [Object.assign({"show":true}, mapData.NpdObj)];
+    // let retVal = setupGisMap(gisMapDiv_id, layers);
+    // gisMap = retVal[0];
+    // mapDiv = retVal[1];
+    [gisMap, mapDiv] = setupGisMap(gisMapObj, gisMapDiv_id);
+    if (gisMapObj.hasOwnProperty('title')) {
+        gisPanel.title.label = gisMapObj.title;
+    }
+    gisPanel.node.appendChild(mapDiv);
+}
 
-    let datatreeId = "datatree";
-    let dataTree = document.createElement('div');
-    dataTree.setAttribute("id", datatreeId);
-    sideBar.appendChild(dataTree);
-    $("#datatree").fancytree({
-      source: {
-        url: "/resources/ajax-tree-fs.json",
-        dataType: "json",
-        cache: false      
-      }
-    });
-    var pars = {
-        vn_uri: "NOR::SKARV::SUBSEA",
-        treename: "ast",
-        max_time_ms: 3000
-    };
-    var queryString = $.param(pars);
-    console.log("http://localhost:8080/api/v1/visinum/dataset/treename?" + queryString);
-    // https://stackoverflow.com/questions/32126938/parse-string-having-key-value-pairs-as-json/32127023#32127023
-    // let ipstr = document.getElementById(sidebarSearchBox).value
-    // let jsonStr2 = '{"' + ipstr.replace(/ /g, '", "').replace(/=/g, '": "') + '"}';
-    // let ipObj = JSON.parse(jsonStr2)
-    // console.log(ipObj)
 
-    let mapDivId = "map";
+
+export function setupGisMap(gisMapObj, mapDivId) {
+    if (!mapDivId) mapDivId = "gis-map";
+
     let mapDiv = document.createElement('div');
     mapDiv.setAttribute("id", mapDivId);
     mapDiv.setAttribute("src", "");
-    // https://stackoverflow.com/questions/36355365/map-is-not-rendering-in-leafletjs-getting-blank-page-no-errors
     mapDiv.setAttribute("style", "width: 100%; height: 100%; margin: 0 auto;");
-    // let docBody = document.getElementsByTagName("BODY")[0];
-    docBody.appendChild(mapDiv);
-
-    $('#sidebar').slideReveal({
-        "width": "30%"
+    
+    let whiteBGlayer = L.tileLayer("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEAAQMAAABmvDolAAAAA1BMVEX///+nxBvIAAAAH0lEQVQYGe3BAQ0AAADCIPunfg43YAAAAAAAAAAA5wIhAAAB9aK9BAAAAABJRU5ErkJggg==");
+    let GEBCOlayer = L.tileLayer.wms(mapData.GebcoObj.baseUrl, mapData.GebcoObj.options);
+    let map = L.map(mapDiv, { 
+        trackResize: true, 
+        attributionControl: false,
+        layers: [GEBCOlayer] 
     });
-
-    let map = L.map(mapDiv, gisMapObj.options);    
-
-    let baseMaps = {};
-    let overlayMaps = {};
+    let basemaps = {
+        "GEBCO": GEBCOlayer,
+        "no background": whiteBGlayer
+    };
+    let NPD = L.tileLayer.wms(mapData.NpdObj.baseUrl, mapData.NpdObj.options);
+    // let overlaymaps = {
+    //     "NPD": NPD
+    // };
+    let overlaymaps = {};
     if (gisMapObj.layers) {
         gisMapObj.layers.map( function(layerObj) {
             let tilelayer;
-            switch (layerObj.source) {
-                case "WMS":
+            switch (layerObj.type) {
+                case "wms":
                     tilelayer = L.tileLayer.wms(layerObj.baseUrl, layerObj.options);
                     break;
-                case "TILE":
-                    tilelayer = L.tileLayer(layerObj.urlTemplate, layerObj.options);
+                case "tilemap":
+                    tilelayer = L.tileLayer(layerObj.baseUrl, layerObj.options);
+                    break;
+                case "layerGroup":
+                    // layersList = [];  // layer group
+                    // layerObj.layers.map(function(layer) {
+                    //     layersList.push( L.tileLayer(layer.baseUrl, layer.options) );
+                    // })
+                    // tilelayer = L.layerGroup(layersList);
+                    tilelayer = L.layerGroup();
+                    layerObj.layers.map(function(layer) {
+                        tilelayer.addLayer( L.tileLayer(layer.baseUrl, layer.options) );
+                    })
+                    break;
+                case "geojsonFC":
+                    tilelayer = loadGeojsonFeatureCollection(layerObj.baseUrl, map);
                     break;
                 default:
                     return null;
             }
-            switch (layerObj.type) {
-                case "BASEMAP":
-                    baseMaps[layerObj.title] = tilelayer;
-                    break;
-                case "OVERLAY":
-                    overlayMaps[layerObj.title] = tilelayer;
-                    break;
-            }
+            //let tilelayer = L.tileLayer.wms(layerObj.baseUrl, layerObj.options);
+            overlaymaps[layerObj.title] = tilelayer;
             if (layerObj.show) map.addLayer(tilelayer);
         } );
     }
-
-    // let title: any = new L.Control();   // L.control();
-    // title.onAdd = function(map) {
-    //     this._div = L.DomUtil.create('div', 'ctl title');
-    //     this.update();
-    //     return this._div;
-    // };
-    // title.update = function(props) {
-    //     this._div.innerHTML = '<div style="font-family:Arial">Qwilka Subsea GIS</div> \
-    //     <div align="middle" style="font-family:Arial;font-size:small"><a target="_blank" href="https://qwilka.github.io/blog/2018/04/19/introducing-qwilka-gis">about</a></div>';
-    // };
-    // title.addTo(map);
-
-    let layerControl = L.control.layers(baseMaps, overlayMaps, { 
+    let layerControl = L.control.layers(basemaps, overlaymaps, { 
         collapsed: true, 
         autoZIndex: true 
     })
     layerControl.addTo(map);
 
-    let attribut = L.control.attribution({ 
-        position: 'bottomright', 
-        prefix: '<a target="_blank" href="https://qwilka.github.io/blog/2018/04/19/introducing-qwilka-gis">About Visinum GIS</a>'
-    });
-    attribut.addTo(map);
-
     let scale = L.control.scale({ 
-        position: 'bottomright', 
+        position: 'bottomleft', 
         metric: true, 
         imperial: false 
     });
     scale.addTo(map);
 
+    map.setView(gisMapObj.center, gisMapObj.zoom);  // map.setView([58.80, 2.5], 5);
+    setTimeout(refreshGIS, 1000, map); // https://github.com/Leaflet/Leaflet/issues/941 
+
     function onMapRightClick(evt) {
-        let X = map.layerPointToContainerPoint(evt.layerPoint).x;
-        let Y = map.layerPointToContainerPoint(evt.layerPoint).y;
-        let size = map.getSize() 
-        let params = {
-          request: 'GetFeatureInfo',
-          service: 'WMS',
-          srs: 'EPSG:4326',
-          version: '1.1.1',      
-          bbox: map.getBounds().toBBoxString(),
-          format: mapData.GebcoObj.options.format,
-          x: X,
-          y: Y,
-          height: size.y,
-          width: size.x,
-          layers: 'GEBCO_LATEST_2',
-          query_layers: 'GEBCO_LATEST_2',
-          info_format: 'text/html'
-        };
-        let featInfoUrl = mapData.GebcoObj.baseUrl + L.Util.getParamString(params, mapData.GebcoObj.baseUrl, true)
-        let getinfo = $.ajax({
-            url: featInfoUrl,
-            dataType: "html",
-            success: function (xhr) { console.log(xhr.statusText);},
-            error: function (xhr) { console.log(xhr.statusText); }
-            })
-        $.when(getinfo).done(function() {
-                    let htmlstr = $.parseHTML( getinfo.responseText );
-                    let body = $(htmlstr).find('body:first');
-                    $.each(htmlstr, function(i, el){
-                        if (el.nodeName == '#text') {
-                            let targetStr = el.nodeValue
-                            // console.log(i, targetStr);
-                            let test = targetStr.match(/Elevation value \(m\):\s*(-?\d+)/)
-                            if (test) {
-                                let elevation = test[1];
-                                if (elevation>=0) {
-                                    pustr += "<br>elevation " + elevation + " m (GEBCO)";
-                                } else {
-                                    pustr += "<br>depth " + elevation + " m (GEBCO)";
-                                }
-                                // console.log("elevation=", elevation)
-                                popup.setContent(pustr)
-                            }
-                        }
-            });
-        });
-        let lat = evt.latlng.lat
-        let long = evt.latlng.lng
-        let latlong_WGS84 = new LatLon(lat, long, LatLon.datum.WGS84);
-        let latlong_ED50 = latlong_WGS84.convertDatum(LatLon.datum.ED50);
-        let utmCoord = latlong_ED50.toUtm();
+        let lat = evt.latlng.lat;
+        let long = evt.latlng.lng;
+        let glatlong = new geodesyLatLon(lat, long);
+        let utmCoord = glatlong.toUtm();
         let pustr = "Location coordinates:";
-        pustr += "<br>long. " + (long).toFixed(5) + "&deg;  lat. " + (lat).toFixed(5) + "&deg; (WGS84)";
-        pustr += "<br>UTM zone " + utmCoord.zone + utmCoord.hemisphere;
-        pustr += "<br>E" + (utmCoord.easting).toFixed(1) + " N" + (utmCoord.northing).toFixed(1) + " (ED50)";
+        pustr += `<br>long. ${(long).toFixed(2)}&deg; lat. ${(lat).toFixed(2)}&deg;`;
+        pustr += `<br>UTM zone ${utmCoord.zone}${utmCoord.hemisphere}`;
+        pustr += `<br>E${(utmCoord.easting).toFixed(3)} N${(utmCoord.northing).toFixed(3)}`;
+        //pustr += '<br><font color="green"><a href=_testfunc1>Fire test function1 in app</a></font>';
         let popup = L.popup();
         popup
             .setLatLng(evt.latlng)
             .setContent(pustr)
             .openOn(map);
     }
-    map.on('contextmenu', onMapRightClick);
+    map.on('contextmenu',onMapRightClick);
+
 
     return [map, mapDiv];
 }
+
+
+function loadGeojsonFeatureCollection(geojsonFile, map) {
+    let geojsonLayer = new L.GeoJSON.AJAX(geojsonFile ,{
+        style: function(feature) {
+            //console.log(feature);
+            switch (feature.properties.type) {
+                case 'prod_flowline': return {color: "#ffff00"};
+                case 'gi_flowline':  return {color: "#ffffff"};
+                default:  return {color: "#ff0066"};
+            }
+        },
+        onEachFeature: function (feature, layer) {
+            //popupOptions = {maxWidth: 200};
+            //layer.bindPopup(feature.properties.name);
+            //console.log(feature.coordinates);
+            //var pustr;
+            // https://gis.stackexchange.com/questions/121482/click-events-with-leaflet-and-geojson
+            // https://gis.stackexchange.com/questions/49869/how-to-open-popup-menu-on-right-click-in-leaflet
+            layer.on({
+                click: function (evt) {
+                    //pustr = evt.latlng.toString()
+                    //console.log(feature.geometry.coordinates);
+                    popup
+                        .setLatLng(evt.latlng)
+                        .setContent('<h1>CLICK '+feature.properties.name+'</h1><p>'+evt.latlng.toString()+'</p>')
+                        .openOn(map)
+                },
+                contextmenu: function (evt) {
+                    // https://gis.stackexchange.com/questions/41759/how-do-i-stop-event-propagation-with-rightclick-on-leaflet-marker
+                    L.DomEvent.stopPropagation(evt); // prevent event propagation
+                    //pustr = evt.latlng.toString()
+                    var lat = evt.latlng.lat
+                    var long = evt.latlng.lng
+                    var bbspread = 0.0001;
+                    var index = KDBUSH(feature.geometry.coordinates);
+                    var idxList = index.range(long-bbspread, lat-bbspread, long+bbspread, lat+bbspread);
+                    var pustr = '<h1>Line '+feature.properties.name+'</h1>'
+                    pustr += '<p>'+evt.latlng.toString()+'</p>'
+                    if (idxList.length>0) {
+                        var mindist = Infinity, closest_idx;
+                        for (var ii=0, len=idxList.length; ii<len; ii++) {
+                            var x2 = feature.geometry.coordinates[idxList[ii]][0];
+                            var y2 = feature.geometry.coordinates[idxList[ii]][1];
+                            var dd = Math.sqrt(Math.pow( long-x2 , 2) + Math.pow( lat-y2 , 2));
+                            if (dd<mindist) {
+                                closest_idx = idxList[ii];
+                                mindist = dd;
+                            }
+                        }
+                        pustr += '<br>depth '+ parseFloat(feature.properties.depth[closest_idx]);
+                        pustr += '<br>KP    '+ parseFloat(feature.properties.KP[closest_idx]);
+                        pustr += '<br>hits '+ parseInt(idxList.length);
+                    }
+                    let popup = L.popup();
+                    popup
+                        .setLatLng(evt.latlng)
+                        .setContent(pustr)
+                        .openOn(map)
+                },
+            });
+        },
+    }  );
+    return geojsonLayer;
+}
+
+
+
+export function refreshGIS() {
+    // Leaflet doesn't display all tiles if map is hidden on startup
+    // https://github.com/Leaflet/Leaflet/issues/941
+    // https://github.com/tombatossals/angular-leaflet-directive/issues/49
+    // http://leafletjs.com/reference.html#map-set-methods
+    mapRefList.map(
+        function(mapref) {
+            if (mapref) mapref.invalidateSize();
+        }
+    )
+}
+
+
+// export function showGISdata(name) {
+//     let gisMapObj;
+//     switch (name) {
+//         case "Refresh GIS display":
+//             refreshGIS(gisMap);
+//             break;
+//         case "load test geojson":
+//             console.log("load test geojson : ", name);
+//             loadTestGeojson();
+//             break;
+//         case "Base map - North Sea":
+//             gisMapObj = {
+//                 title: "GIS-North Sea",
+//                 layers: [Object.assign({"show":true}, mapData.NpdObj)],
+//                 center: [58.80, 2.5],
+//                 zoom: 5
+//             }
+//             loadGisMap(gisMapObj);
+//             break;
+//         case "Skarv area map":
+//             gisMapObj = {
+//                 title: "GIS-Skarv",
+//                 layers: [
+//                     Object.assign({"show":true}, mapData.NpdObj),
+//                     mapData.SK2006_tm_MBES,
+//                     mapData.SK2013_02_tm_MBES,
+//                     mapData.SK2013_08_tm_MBES,
+//                     mapData.SK2013_final_tm_MBES,
+//                     mapData.SK2015_tm_MBES_shadedrelief,
+//                     mapData.SK2014_field_layouts,
+//                     mapData.SK2014_close_layouts,
+//                     mapData.SK2015_5point_geojsonFC,
+//                 ],
+//                 center: [65.70, 7.65],
+//                 zoom: 10
+//             }
+//             loadGisMap(gisMapObj);
+//             break;
+//         case "Valhall/Ula area map":
+//             gisMapObj = {
+//                 title: "GIS-Valhall",
+//                 layers: [
+//                     Object.assign({"show":true}, mapData.NpdObj),
+//                     mapData.Valhall2014_tm_MBES,
+//                     mapData.Valhall2014_PC_tm_MBES,
+//                 ],
+//                 center: [56.27, 3.39],
+//                 zoom: 10
+//             }
+//             loadGisMap(gisMapObj);
+//             break;
+//         case "Alvheim layouts":
+//             gisMapObj = {
+//                 title: "GIS-Alvheim",
+//                 layers: [
+//                     Object.assign({"show":true}, mapData.NpdObj),
+//                     mapData.Alvheim2006_local_layouts,
+//                     mapData.Alvheim2016_overall_layout,
+//                     mapData.Alvheim2006_overall_layout
+//                 ],
+//                 center: [59.567, 1.995],
+//                 zoom: 10
+//             }
+//             loadGisMap(gisMapObj);
+//             break;
+//         default:
+//             console.log("showGISdata option not recognised: ", name);
+//     }
+// }

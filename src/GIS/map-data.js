@@ -1,151 +1,553 @@
+/*
+Copyright © 2017 Qwilka Limited. All rights reserved.
+Any unauthorised copying or distribution is strictly prohibited.
+Author: Stephen McEntee <stephenmce@gmail.com>
+*/
+import * as L from 'leaflet';
 
-// import * as L from 'leaflet';
+//export const Skarv_FactMap_link = 'http://npdmap1.npd.no/website/NPDGIS/viewer.htm?ActiveLayer=1&Layers=1111011101111110101111111111110100101111001011001011111110&Query=IDFACILITY=414071&Queryzoom=YES&ZOOMSCALE=200000';
+//export const whiteBGlayer = L.tileLayer("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEAAQMAAABmvDolAAAAA1BMVEX///+nxBvIAAAAH0lEQVQYGe3BAQ0AAADCIPunfg43YAAAAAAAAAAA5wIhAAAB9aK9BAAAAABJRU5ErkJggg==");
 
-
+// http://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?request=getCapabilities&service=wms&version=1.3.0
 export let GebcoObj = {
     title: "GEBCO",
-    source: "WMS",
-    type: "BASEMAP",
-    ref: ["https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/"],
-    GetCapabilities: "https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?request=getCapabilities&service=wms&version=1.1.1",
-    baseUrl: "https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv",
+    type: "wms",
+    baseUrl: "http://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?",
     options: {
         layers: "GEBCO_LATEST",
         CRS: "EPSG:4326",
-        version: '1.1.1',
         format: "image/png",
+        maxZoom: 9,
         noWrap: true,
         transparent: false,
         opacity: 0.7,
-        attribution: '<a target="_blank" href="https://www.gebco.net/">GEBCO</a>'
+        attribution: "GEBCO"
     }
 };
-// export let GEBCOlayer = L.tileLayer.wms(GebcoObj.baseUrl, GebcoObj.options);
+//export let GEBCOlayer = L.tileLayer.wms(GebcoObj.baseUrl, GebcoObj.options);
 
-export let OsmObj = {
-    title: "OpenStreetMap",
-    source: "WMS",
-    type: "BASEMAP",
-    ref: ["http://ows.terrestris.de/", "https://www.openstreetmap.org/copyright"],
-    baseUrl: "http://ows.terrestris.de/osm/service",
-    options: {
-        layers: "TOPO-OSM-WMS",
-        CRS: "EPSG:4326",
-        version: '1.1.1',
-        format: "image/png",
-        noWrap: true,
-        transparent: false,
-        opacity: 0.7,
-        attribution: '&copy; <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }
-};
-
-export let WhitebgObj = {
-    title: "white background",
-    source: "TILE",
-    type: "BASEMAP",
-    urlTemplate: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEAAQMAAABmvDolAAAAA1BMVEX///+nxBvIAAAAH0lEQVQYGe3BAQ0AAADCIPunfg43YAAAAAAAAAAA5wIhAAAB9aK9BAAAAABJRU5ErkJggg==",
-    options: {}
-};
-
-
+// http://gis.npd.no/ogc/factmaps/2_0?SERVICE=WMS&REQUEST=GetCapabilities
 export let NpdObj = {
-    title: "Norway NPD pipelines",
-    source: "WMS",
-    type: "OVERLAY",
-    ref: ["http://npdwms.npd.no/"],
-    GetCapabilities: "http://gis.npd.no/ogc/factmaps/2_0?SERVICE=WMS&REQUEST=GetCapabilities",
-    baseUrl: "http://gis.npd.no/ogc/factmaps/2_0",
+    title: "NPD",
+    type: "wms",
+    baseUrl: "http://gis.npd.no/ogc/factmaps/2_0?",
     options: {
         layers: "dscAll,pplAll,fclFixed",
         CRS: "EPSG:23032",
-        version: '1.3.0',
         format: "image/png",
         transparent: true,
         noWrap: true,
         opacity: 1.0,
-        attribution: '<a target="_blank" href="http://npdwms.npd.no/">NPD</a>'
+        attribution: "NPD"
     }
 };
+//export let NPD = L.tileLayer.wms(NpdObj.baseUrl, NpdObj.options);
 
-export let IREobj = {
-    title: "Ireland pipelines",
-    source: "WMS",
-    type: "OVERLAY",
-    ref: ["https://data.gov.ie/dataset/offshore-gas-pipeline"],
-    baseUrl: "http://atlas.marine.ie/arcgis/services/EnergyResourcesInfrastructure/MapServer/WMSServer",
+// Skarv =======================================================
+export let SK2015_tm_MBES_shadedrelief = {
+    title: "Skarv 2015 MBES (shaded relief)",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/2015/tilemaps/Skarv_2015/{z}/{x}/{y}.png",
     options: {
-        layers: '1,2,3',
-        CRS: "EPSG:4326",
-        format: "image/png",
-        transparent: true,
-        noWrap: true,
-        opacity: 1.0,
-        attribution: '<a target="_blank" href="https://data.gov.ie/dataset/offshore-gas-pipeline">IE-GovData</a> <a href="https://creativecommons.org/licenses/by/4.0/">(CC BY 4.0)</a>'
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 10,
+        maxZoom: 22,
+        maxNativeZoom: 20
+    }
+};
+export let SK2015_5point_geojsonFC = {
+    title: "Skarv 2015 5-point routes (FC)",
+    type: "geojsonFC",
+    baseUrl: "fields/Skarv/2015/lines/SK2015_lines.geojson"
+};
+export let SK2013_02_tm_MBES = {
+    title: "Skarv 2013-02 MBES (interim)",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/2013/tilemaps/Skarv_2013-02_data/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 10,
+        maxZoom: 22,
+        maxNativeZoom: 20
+    }
+};
+export let SK2013_08_tm_MBES = {
+    title: "Skarv 2013-08 MBES (interim)",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/2013/tilemaps/Skarv_2013-08_data/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 10,
+        maxZoom: 22,
+        maxNativeZoom: 20
+    }
+};
+export let SK2013_final_tm_MBES = {
+    title: "Skarv 2013 MBES (final)",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/2013/tilemaps/Skarv_2013_final/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 10,
+        maxZoom: 22,
+        maxNativeZoom: 20
+    }
+};
+export let SK2006_tm_MBES = {
+    title: "Skarv 2006 MBES",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/2006/tilemaps/Skarv_2006/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 10,
+        maxZoom: 20,
+        maxNativeZoom: 18
     }
 };
 
-export let MarScoFishobj = {
-    title: "Marine Scotland (fishing activity)",
-    source: "WMS",
-    type: "OVERLAY",
-    ref: ["http://marine.gov.scot/maps/1529", 
-        "http://marine.gov.scot/maps/515",
-        "http://www.gov.scot/Topics/marine/seamanagement/nmpihome/wms-wfs"
+
+// Skarv layouts --------------
+let SK2014_FPSO_field_layout = {
+    title: "Skarv FPSO field layout 2014",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/layouts/FPSO_field/tilemap/Skarv_FPSO_field_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 13,
+        maxZoom: 18,
+        maxNativeZoom:17
+    }
+};
+    // url = "fields/Skarv/layouts/FPSO_field/tilemap/Skarv_FPSO_field_2014/{z}/{x}/{y}.png"
+    // var FPSO_field_2014_map = L.tileLayer(url, {tms: true,
+    //     CRS: "EPSG:23032",
+    //     minZoom: 13,
+    //     maxZoom: 18,
+    //     maxNativeZoom:17 })
+let SK2014_Tilje_SkarvA_field_layout = {
+    title: "Skarv Tilje-SkarvA field layout 2014",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/layouts/Tilje_SkarvA_field/tilemap/Tilje_SkarvA_field_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 13,
+        maxZoom: 18,
+        maxNativeZoom:17
+    }
+};
+    // url = "fields/Skarv/layouts/Tilje_SkarvA_field/tilemap/Tilje_SkarvA_field_2014/{z}/{x}/{y}.png"
+    // var Tilje_SkarvA_field_2014_map = L.tileLayer(url, {tms: true,
+    //     CRS: "EPSG:23032",
+    //     minZoom: 13,
+    //     maxZoom: 18,
+    //     maxNativeZoom:17 })
+let SK2014_Idun_field_layout = {
+    title: "Skarv Idun field layout 2014",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/layouts/Idun_field/tilemap/Idun_field_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 13,
+        maxZoom: 18,
+        maxNativeZoom:17
+    }
+};
+    // url = "fields/Skarv/layouts/Idun_field/tilemap/Idun_field_2014/{z}/{x}/{y}.png"
+    // var Idun_field_2014_map = L.tileLayer(url, {tms: true,
+    //     CRS: "EPSG:23032",
+    //     minZoom: 13,
+    //     maxZoom: 18,
+    //     maxNativeZoom:17 })
+let SK2014_ATS_tiein_field_layout = {
+    title: "Skarv ATS tie-in field layout 2014",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/layouts/ATS_tiein_field/tilemap/ATS_tiein_field_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 13,
+        maxZoom: 18,
+        maxNativeZoom:17
+    }
+};
+    // url = "fields/Skarv/layouts/ATS_tiein_field/tilemap/ATS_tiein_field_2014/{z}/{x}/{y}.png"
+    // var ATS_tiein_field_2014_map = L.tileLayer(url, {tms: true,
+    //     CRS: "EPSG:23032",
+    //     minZoom: 13,
+    //     maxZoom: 18,
+    //     maxNativeZoom:17 })
+export let SK2014_field_layouts = {
+    title: "Skarv field layouts 2014",
+    type: "layerGroup",
+    layers: [
+        SK2014_FPSO_field_layout,
+        SK2014_Tilje_SkarvA_field_layout,
+        SK2014_Idun_field_layout,
+        SK2014_ATS_tiein_field_layout
     ],
-    baseUrl: "http://msmap1.atkinsgeospatial.com/geoserver/nmpwfs/ows",
     options: {
-        layers: 'utility_and_government_services_fishing_intensity_pipelines_all_gears',
-        CRS: "EPSG:3857",
-        format: "image/png",
-        transparent: true,
-        noWrap: true,
-        opacity: 0.9,
-        token: "d46ffd2a-e192-4e51-8a6a-b3292c20f1ee",
-        attribution: '<a target="_blank" href="http://marine.gov.scot/maps/1529">&copy; Crown Copyright (ScotGov)</a>'
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 13,
+        maxZoom: 18,
+        maxNativeZoom: 17
     }
 };
-
-export let MarScoFishObj = {
-    title: "Marine Scotland (fishing activity)",
-    source: "WMS",
-    type: "OVERLAY",
-    ref: ["http://marine.gov.scot/maps/1529", 
-        "http://marine.gov.scot/maps/515",
-        "http://www.gov.scot/Topics/marine/seamanagement/nmpihome/wms-wfs"
+    // var Skarv_field_layouts_2014_group = L.layerGroup([
+    //     Tilje_SkarvA_field_2014_map,
+    //     Idun_field_2014_map,
+    //     ATS_tiein_field_2014_map,
+    //     FPSO_field_2014_map
+    // ]
+    // )
+let SK2014_FPSO_close_layout = {
+    title: "Skarv FPSO close layout 2014",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/layouts/FPSO_close/tilemap/Skarv_FPSO_close_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 15,
+        maxZoom: 20,
+        maxNativeZoom: 18
+    }
+};
+    // url = "fields/Skarv/layouts/FPSO_close/tilemap/Skarv_FPSO_close_2014/{z}/{x}/{y}.png"
+    // var FPSO_close_2014_map = L.tileLayer(url, {tms: true,
+    //     CRS: "EPSG:23032",
+    //     minZoom: 15,
+    //     maxZoom: 19,
+    //     maxNativeZoom:18})
+let SK2014_Tilje_SkarvA_close_layout = {
+    title: "Skarv Tilje-SkarvA close layout 2014",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/layouts/Tilje_SkarvA_close/tilemap/Tilje_SkarvA_close_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 15,
+        maxZoom: 20,
+        maxNativeZoom: 18
+    }
+};
+    // url = "fields/Skarv/layouts/Tilje_SkarvA_close/tilemap/Tilje_SkarvA_close_2014/{z}/{x}/{y}.png"
+    // var Tilje_SkarvA_close_2014_map = L.tileLayer(url, {tms: true,
+    //     CRS: "EPSG:23032",
+    //     minZoom: 15,
+    //     maxZoom: 19,
+    //     maxNativeZoom:18})
+let SK2014_SkarvBC_close_layout = {
+    title: "Skarv SkarvBC close layout 2014",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/layouts/SkarvBC_close/tilemap/SkarvBC_close_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 15,
+        maxZoom: 20,
+        maxNativeZoom: 18
+    }
+};
+    // url = "fields/Skarv/layouts/SkarvBC_close/tilemap/SkarvBC_close_2014/{z}/{x}/{y}.png"
+    // var SkarvBC_close_2014_map = L.tileLayer(url, {tms: true,
+    //     CRS: "EPSG:23032",
+    //     minZoom: 15,
+    //     maxZoom: 19,
+    //     maxNativeZoom:18})
+let SK2014_Idun_close_layout = {
+    title: "Skarv Idun close layout 2014",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/layouts/Idun_close/tilemap/Idun_close_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 15,
+        maxZoom: 20,
+        maxNativeZoom: 18
+    }
+};
+    // url = "fields/Skarv/layouts/Idun_close/tilemap/Idun_close_2014/{z}/{x}/{y}.png"
+    // var Idun_close_2014_map = L.tileLayer(url, {tms: true,
+    //     CRS: "EPSG:23032",
+    //     minZoom: 15,
+    //     maxZoom: 19,
+    //     maxNativeZoom:18})
+let SK2014_ATS_tiein_close_layout = {
+    title: "Skarv ATS tie-in close layout 2014",
+    type: "tilemap",
+    baseUrl: "fields/Skarv/layouts/ATS_tiein_close/tilemap/ATS_tiein_close_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 15,
+        maxZoom: 20,
+        maxNativeZoom: 18
+    }
+}; 
+    // url = "fields/Skarv/layouts/ATS_tiein_close/tilemap/ATS_tiein_close_2014/{z}/{x}/{y}.png"
+    // var ATS_tiein_close_2014_map = L.tileLayer(url, {tms: true,
+    //     CRS: "EPSG:23032",
+    //     minZoom: 15,
+    //     maxZoom: 19,
+    //     maxNativeZoom:18})
+export let SK2014_close_layouts = {
+    title: "Skarv close layouts 2014",
+    type: "layerGroup",
+    layers: [
+        SK2014_FPSO_close_layout,
+        SK2014_Tilje_SkarvA_close_layout,
+        SK2014_SkarvBC_close_layout,
+        SK2014_Idun_close_layout,
+        SK2014_ATS_tiein_close_layout
     ],
-    baseUrl: "http://msmap1.atkinsgeospatial.com/geoserver/nmpwfs/ows",
     options: {
-        layers: 'utility_and_government_services_fishing_intensity_pipelines_all_gears',
-        CRS: "EPSG:3857",
-        version: '1.3.0',
-        format: "image/png",
-        transparent: true,
-        noWrap: true,
-        opacity: 0.9,
-        attribution: '<a target="_blank" href="http://marine.gov.scot/maps/1529">&copy; Crown Copyright (ScotGov)</a>'
+        tms: true,
+        CRS: "EPSG:23032",
+        minZoom: 15,
+        maxZoom: 20,
+        maxNativeZoom: 18
     }
 };
-
-export let EezObj = {
-    title: "Exclusive Economic Zones",
-    source: "WMS",
-    type: "OVERLAY",
-    ref: ["http://www.marineregions.org/webservices.php", 
-        "https://www.naturalearthdata.com/"
+    // var close_layouts_group = L.layerGroup([
+    //     Tilje_SkarvA_close_2014_map,
+    //     SkarvBC_close_2014_map,
+    //     Idun_close_2014_map,
+    //     ATS_tiein_close_2014_map,
+    //     FPSO_close_2014_map
+    // ]
+    // )
+export let skarvMapObj = {
+    title: "Skarv",
+    layers: [
+        Object.assign({"show":true}, NpdObj),
+        SK2006_tm_MBES,
+        SK2013_02_tm_MBES,
+        SK2013_08_tm_MBES,
+        SK2013_final_tm_MBES,
+        SK2015_tm_MBES_shadedrelief,
+        SK2014_field_layouts,
+        SK2014_close_layouts,
+        SK2015_5point_geojsonFC,
     ],
-    baseUrl: "http://geo.vliz.be:80/geoserver/MarineRegions/wms",
+    center: [65.70, 7.65],
+    zoom: 10
+}
+
+// Valhall =======================================================
+export let Valhall2014_tm_MBES = {
+    title: "Valhall/Ula 2014",
+    type: "tilemap",
+    baseUrl: "Valhall/2014/tilemaps/Valhall_2014_shaded_reliefs/{z}/{x}/{y}.png",
     options: {
-        layers: 'MarineRegions:eez_boundaries',
-        version: '1.1.1',
-        format: "image/png",
-        transparent: true,
-        noWrap: true,
-        opacity: 0.9,
-        attribution: '<a target="_blank" href="http://www.marineregions.org">FlandersMarineInst (CC-BY-NC-SA)</a>'
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 10,
+        maxZoom: 22,
+        maxNativeZoom: 20
     }
 };
+export let Valhall2014_PC_tm_MBES = {
+    title: "Valhall Power Cable 2014",
+    type: "tilemap",
+    baseUrl: "Valhall/2014/tilemaps/Valhall_Power_Cable_2014/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 10,
+        maxZoom: 22,
+        maxNativeZoom: 20
+    }
+};
+export let valhallMapObj = {
+    title: "Valhall",
+    layers: [
+        Object.assign({"show":true}, NpdObj),
+        Valhall2014_tm_MBES,
+        Valhall2014_PC_tm_MBES,
+    ],
+    center: [56.27, 3.39],
+    zoom: 10
+}
+// Alvheim =======================================================
+let Alvheim2016_Boa_layout = {
+    title: "Alvheim Boa layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/Boa/tilemap/Alvheim_Boa_layout_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+let Alvheim2016_Boyla_layout = {
+    title: "Alvheim Bøyla layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/Bøyla/tilemap/Alvheim_Bøyla_layout_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+let Alvheim2016_East_Kameleon_layout = {
+    title: "Alvheim East Kameleon layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/East_Kameleon/tilemap/Alvheim_East_Kameleon_layout_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+let Alvheim2016_FPSO_layout = {
+    title: "Alvheim FPSO area layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/FPSO/tilemap/Alvheim_FPSO_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+let Alvheim2016_Kneler_A_layout = {
+    title: "Alvheim Kneler A layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/Kneler_A/tilemap/Alvheim_Kneler_A_layout_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+let Alvheim2016_Kneler_B_layout = {
+    title: "Alvheim Kneler B layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/Kneler_B/tilemap/Alvheim_Kneler_B_layout_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+let Alvheim2016_Vilje_layout = {
+    title: "Alvheim Vilje layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/Vilje_Sør/tilemap/Alvheim_Vilje_Sør_layout_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+let Alvheim2016_Volund_layout = {
+    title: "Alvheim Volund layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/Volund/tilemap/Alvheim_Volund_layout_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+let Alvheim2016_Water_Disposal_Wells_layout = {
+    title: "Alvheim Water Disposal Wells layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/Water_Disposal_wells/tilemap/Alvheim_Water_Disposal_wells_layout_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+export let Alvheim2016_overall_layout = {
+    title: "Alvheim overall layout 2016",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/overall_layout_2016/tilemap/Alvheim_overall_layout_2016/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 8,
+        maxZoom: 16,
+        maxNativeZoom: 14
+    }
+};
+export let Alvheim2006_overall_layout = {
+    title: "Alvheim overall layout 2006",
+    type: "tilemap",
+    baseUrl: "fields/Alvheim/layouts/overall_layout_2006/tilemap/Alvheim_overall_layout/{z}/{x}/{y}.png",
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 8,
+        maxZoom: 14,
+        maxNativeZoom:14
+    }
+};
+export let Alvheim2016_local_layouts = {
+    title: "Alvheim local layouts 2016",
+    type: "layerGroup",
+    layers: [
+        Alvheim2016_Boa_layout,
+        Alvheim2016_Boyla_layout,
+        Alvheim2016_East_Kameleon_layout,
+        Alvheim2016_FPSO_layout,
+        Alvheim2016_Kneler_A_layout,
+        Alvheim2016_Kneler_B_layout,
+        Alvheim2016_Vilje_layout,
+        Alvheim2016_Volund_layout,
+        Alvheim2016_Water_Disposal_Wells_layout
+    ],
+    options: {
+        tms: true,
+        CRS: "EPSG:23031",
+        minZoom: 14,
+        maxZoom: 22,
+        maxNativeZoom:20
+    }
+};
+export let alvheimMapObj = {
+    title: "Alvheim",
+    layers: [
+        Object.assign({"show":true}, NpdObj),
+        Alvheim2016_overall_layout,
+        Alvheim2016_local_layouts,
+        Alvheim2006_overall_layout
+    ],
+    center: [59.567, 1.995],
+    zoom: 10
+}
 
-
-
+// North Sea =============================
+export let northseaMapObj = {
+    title: "North Sea",
+    layers: [Object.assign({"show":true}, NpdObj)],
+    center: [58.80, 2.5],
+    zoom: 5
+}
 
