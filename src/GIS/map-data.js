@@ -1,8 +1,3 @@
-/*
-Copyright © 2017 Qwilka Limited. All rights reserved.
-Any unauthorised copying or distribution is strictly prohibited.
-Author: Stephen McEntee <stephenmce@gmail.com>
-*/
 import * as L from 'leaflet';
 
 //export const Skarv_FactMap_link = 'http://npdmap1.npd.no/website/NPDGIS/viewer.htm?ActiveLayer=1&Layers=1111011101111110101111111111110100101111001011001011111110&Query=IDFACILITY=414071&Queryzoom=YES&ZOOMSCALE=200000';

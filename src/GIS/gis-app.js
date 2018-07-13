@@ -1,8 +1,3 @@
-/*
-Copyright © 2017 Qwilka Limited. All rights reserved.
-Any unauthorised copying or distribution is strictly prohibited.
-Author: Stephen McEntee <stephenmce@gmail.com>
-*/
 import { BoxPanel } from '@phosphor/widgets';
 
 // https://github.com/calvinmetcalf/leaflet-ajax/issues/49
