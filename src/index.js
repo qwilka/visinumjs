@@ -32,7 +32,7 @@ import 'jquery.fancytree';
 import { createGisPanel, refreshGIS } from './GIS/gis-app';
 //import * as _3Dviewer from './3Dviewer/3d-viewer';
 // import * as DTMviewer from './3Dviewer/DTM-viewer';
-// import * as DTMviewer2 from './3Dviewer/DTM-viewer2';
+import * as DTMviewer2 from './dtm3d/DTM-viewer2';
 
 const commands = new CommandRegistry();
 
@@ -242,9 +242,9 @@ function main() {
   let dock = new DockPanel();
   dock = new DockPanel();
 
-//   let testDtmBoxPanel = new DTMviewer2.DtmBoxPanel();
-//   dock.addWidget(testDtmBoxPanel);
-//   console.log("testDtmBoxPanel.dtmDivId=", testDtmBoxPanel.dtmDivId);
+  let testDtmBoxPanel = new DTMviewer2.DtmBoxPanel();
+  dock.addWidget(testDtmBoxPanel);
+  console.log("testDtmBoxPanel.dtmDivId=", testDtmBoxPanel.dtmDivId);
 
   dock.addWidget(gisTab);
 //   dock.addWidget(DTMviewer.viewPanel);
