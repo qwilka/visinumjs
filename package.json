@@ -1,0 +1,30 @@
+{
+  "name": "visinumjs",
+  "version": "0.0.1",
+  "description": "Node.js scripts to support Visinum.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qwilka/visinumjs.git"
+  },
+  "keywords": [
+    "data",
+    "computational"
+  ],
+  "author": "Stephen McEntee",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qwilka/visinumjs/issues"
+  },
+  "homepage": "https://github.com/qwilka/visinumjs#readme",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "geodesy": "^2.1.0",
+    "lodash": "^4.17.11",
+    "netcdfjs": "^0.7.0",
+    "rbush": "^3.0.0"
+  }
+}

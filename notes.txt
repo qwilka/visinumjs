@@ -1,0 +1,18 @@
+
+
+## ESM
+https://www.npmjs.com/package/esm  
+
+## geodesy
+https://github.com/chrisveness/geodesy    
+https://www.movable-type.co.uk/scripts/geodesy-library.html  
+https://www.movable-type.co.uk/scripts/geodesy-library-migrating-from-v1.html  
+https://epsg.io/transform#s_srs=23030&t_srs=4326&x=572120.0000000&y=6382750.0000000
+https://github.com/maptiler
+https://github.com/klokantech
+
+## modules
+https://github.com/cheminfo-js/netcdfjs
+https://github.com/aureooms/js-itertools/  Python's iterable and iterator library for JavaScript  
+
+/home/develop/engineering/src/scratch/2017-visinum-desktop-noreact/data-manager/metadata
