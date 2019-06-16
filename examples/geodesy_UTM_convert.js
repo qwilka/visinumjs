@@ -1,5 +1,5 @@
 // node -r esm test.js
-import child_process from 'child_process';
+//import child_process from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';

@@ -16,3 +16,4 @@ https://github.com/cheminfo-js/netcdfjs
 https://github.com/aureooms/js-itertools/  Python's iterable and iterator library for JavaScript  
 
 /home/develop/engineering/src/scratch/2017-visinum-desktop-noreact/data-manager/metadata
+/home/develop/engineering/src/scratch/2017-visinum-desktop-noreact/code_trial
