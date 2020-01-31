@@ -4,11 +4,12 @@ import Utm from 'geodesy/utm';
 let [E, N] = [572120, 6382750];
 let coord_UTM = new Utm(30, "N", E, N, LatLon.datums.ED50);
 console.log("EPSG:23030", coord_UTM.toString());
-let coord_latlon = coord_UTM.toLatLon();
-console.log("EPSG:4326 [lon, lat]", [coord_latlon.lon, coord_latlon.lat])
+let latlonED50 = coord_UTM.toLatLon();
+let latlonWGS84 = latlonED50.convertDatum(LatLon.datums.WGS84);
+console.log("EPSG:4326 [lon, lat]", [latlonWGS84.lon, latlonWGS84.lat])
 // https://epsg.io/transform#s_srs=23030&t_srs=4326&x=572120.0000000&y=6382750.0000000
-console.assert(coord_latlon.lon.toFixed(5) == '-1.79567');
-console.assert(coord_latlon.lat.toFixed(5) == '57.57943');
+console.assert(latlonWGS84.lon.toFixed(5) == '-1.79567');
+console.assert(latlonWGS84.lat.toFixed(5) == '57.57943');
 // console.log("p1.distanceTo(p2)=", d, d.toFixed(3));
 
 

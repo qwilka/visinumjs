@@ -20,7 +20,8 @@ function UTM_to_WGS84(coordinate, SRS) {
         case "EPSG:23030":  // https://www.spatialreference.org/ref/epsg/23030/
             let coord_UTM = new Utm(30, "N", E, N, LatLon.datums.ED50);
             console.log("coord_UTM.toString", coord_UTM.toString());
-            let coord_latlon = coord_UTM.toLatLon();
+            let coord_latlonED50 = coord_UTM.toLatLon();
+            let coord_latlon = coord_latlonED50.convertDatum(LatLon.datums.WGS84);
             // console.log("coord_UTM.toLatLon", coord_latlon)
             // console.log([coord_latlon.lon, coord_latlon.lat])
             return [coord_latlon.lon, coord_latlon.lat]
