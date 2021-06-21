@@ -1,0 +1,7 @@
+
+
+https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests
+https://stackoverflow.com/questions/62488898/node-js-syntaxerror-cannot-use-import-statement-outside-a-module
+
+
+
