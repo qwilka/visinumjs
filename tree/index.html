@@ -3,8 +3,12 @@
     <head>
     	<title>TESTING vntree.js</title>
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
-    </head>
+		<link rel="stylesheet" href="/libs/jstree.css">
+		<script src="/libs/jstree.js"></script>
+
+	</head>
     <body>
+		<div id="datatree"></div>
         <script src="vntree.js"></script>
         <script type="module">
 			let rootnode = new VnNode("root node");
@@ -24,6 +28,56 @@
 			
 			console.log(rootnode.toTextTree());
 			for (let n of rootnode) console.log(n.name);
-        </script>
+
+			
+
+
+const attachDatatree = (treeData=null) => {
+  var c = 0;
+  function dummy(levels, nodes) {
+    var data = [], i;
+    for (i = 0; i < nodes; i++) {
+        c ++;
+        data.push({
+            'id' : levels + '_' + i,
+            'text' : 'node ' + i + ' ' + (i === 1 ? 'lipsum lipsum lipsum lipsum lipsum lipsum lipsum lipsum ' : ''),
+            'children' : levels > 1 ? dummy(levels - 1, nodes) : []
+        });
+    }
+    return data;
+  }  
+  var instance = new jsTree({}, document.getElementById('datatree'));
+  instance
+      .empty()
+      .create(dummy(2, 10))
+      .openAll();
+  console.log(c);
+  let tree = instance.tree;   // 
+  let root = instance.tree.root;
+  //testnode = instance.select({"id":"2_0"});
+  //testnode = instance.tree.find({id:"2_0"});
+  let testnode = tree.find("1_2")[0];
+  testnode.data.text = testnode.data.text + "_testnode";
+  console.log(testnode);
+  instance.create({id:"a1", text:"new test node"}, testnode);
+  instance.select(testnode);
+  instance.redraw();
+  instance.openAll();
+
+}
+
+attachDatatree();
+
+
+let pnode = PNode("root node");
+let pnode1 = PNode("node1 level1", pnode);
+let pnode2 = PNode("node1 level2", pnode);
+let pnode11 = PNode("node1 level11", pnode1);
+let pnode12 = PNode("node1 level12", pnode1);
+console.log(pnode);
+console.log(pnode.toTextTree());
+for (let n of pnode) console.log(n.name);
+
+</script>
     </body>
 </html>

@@ -3,5 +3,11 @@
 https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests
 https://stackoverflow.com/questions/62488898/node-js-syntaxerror-cannot-use-import-statement-outside-a-module
 
+https://github.com/georapbox/Proxy_two-way_data_binding
+https://medium.com/front-end-weekly/using-proxy-to-track-javascript-class-50a33a6ccb
 
+
+https://stackoverflow.com/questions/35167934/javascript-why-return-function-in-a-function
+https://davidwalsh.name/javascript-functions
+https://stackoverflow.com/questions/31953717/whats-the-purpose-of-returning-a-function-from-a-function
 

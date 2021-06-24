@@ -1,7 +1,7 @@
 
 // node -i -e "$(< vntree.js)"
 
-class VnNode {
+class Node {
     constructor(name, parent=null, data={}) {
         this.name = name;
         this.parent = parent;
@@ -43,6 +43,20 @@ class VnNode {
 
 }
 
+class VnNode extends Node {
+    constructor(name, parent=null, data={}) {
+        super(name, parent, data);
+    }
+}
+
+function PNode(name, parent=null, data={}) {
+    let node = new VnNode(name, parent, data);
+    let pnode = new Proxy(node, {});
+    // pnode.parent = parent;
+    // pnode.data = data;
+    return pnode;
+
+}
 
 let run_tests = false;
 if (run_tests || require.main===module) {
