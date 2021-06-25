@@ -3,11 +3,19 @@
 https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests
 https://stackoverflow.com/questions/62488898/node-js-syntaxerror-cannot-use-import-statement-outside-a-module
 
+https://exploringjs.com/es6/ch_proxies.html
 https://github.com/georapbox/Proxy_two-way_data_binding
 https://medium.com/front-end-weekly/using-proxy-to-track-javascript-class-50a33a6ccb
+https://stackoverflow.com/questions/40961778/returning-es6-proxy-from-the-es6-class-constructor
+
+https://stackoverflow.com/questions/3350215/what-is-returned-from-a-constructor
 
 
 https://stackoverflow.com/questions/35167934/javascript-why-return-function-in-a-function
 https://davidwalsh.name/javascript-functions
 https://stackoverflow.com/questions/31953717/whats-the-purpose-of-returning-a-function-from-a-function
 
+
+https://docs.mongodb.com/manual/reference/method/UUID/
+https://www.mongodb.com/blog/post/generating-globally-unique-identifiers-for-use-with-mongodb
+https://en.wikipedia.org/wiki/Universally_unique_identifier

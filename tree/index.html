@@ -5,6 +5,7 @@
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 		<link rel="stylesheet" href="/libs/jstree.css">
 		<script src="/libs/jstree.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
 
 	</head>
     <body>
@@ -25,9 +26,13 @@
 			node21.add_child(node212);
 			node21.add_child(new VnNode("node213 (level3) parentless"));
 			let node3 = new VnNode("node3 (level1)", rootnode);
+
+            //debugger;
 			
-			console.log(rootnode.toTextTree());
-			for (let n of rootnode) console.log(n.name);
+			console.log(rootnode.to_texttree());
+			//for (let n of rootnode) console.log(n.name);
+            let treeDict = rootnode._to_treedict();
+            debugger;
 
 			
 
@@ -69,14 +74,14 @@ const attachDatatree = (treeData=null) => {
 attachDatatree();
 
 
-let pnode = PNode("root node");
-let pnode1 = PNode("node1 level1", pnode);
-let pnode2 = PNode("node1 level2", pnode);
-let pnode11 = PNode("node1 level11", pnode1);
-let pnode12 = PNode("node1 level12", pnode1);
-console.log(pnode);
-console.log(pnode.toTextTree());
-for (let n of pnode) console.log(n.name);
+// let pnode = PNode("root node");
+// let pnode1 = PNode("node1 level1", pnode);
+// let pnode2 = PNode("node1 level2", pnode);
+// let pnode11 = PNode("node1 level11", pnode1);
+// let pnode12 = PNode("node1 level12", pnode1);
+// console.log(pnode);
+// console.log(pnode.toTextTree());
+// for (let n of pnode) console.log(n.name);
 
 </script>
     </body>
