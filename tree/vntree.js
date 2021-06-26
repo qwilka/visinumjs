@@ -11,12 +11,14 @@ function make_nodeid() {
 
 class VnNode {
     constructor(name, parent=null, data={}, treedict=null) {
+        this.parent = parent;
         this.childs = [];
         if (treedict) {
             this.data = treedict.data;
-            for (let child of treedict.childs) {
-                this.childs.push(new VnNode(null, null, null, child));
-            }
+            // for (let child of treedict.childs) {
+            //     this.childs.push(new VnNode(null, this, null, child));
+            //     //this.add_child(new VnNode(null, null, null, child));
+            // }
         } else {
             this.data = data;
         }
@@ -61,9 +63,14 @@ class VnNode {
         });
 
         if (name) that.name = name;
-        that.parent = parent;
+        //that.parent = parent;
         if (parent !== null) {
             parent.add_child(that)
+        }
+        if (treedict && treedict.childs.length) {
+            for (let child of treedict.childs) {
+                that.add_child(new VnNode(null, null, null, child));
+            }
         }
         return that;
     }
@@ -112,14 +119,16 @@ class VnNode {
     }
 
 
-    toJSON() {
+    to_JSON() {
         let treeDict = this._to_treedict();
         return JSON.stringify(treeDict);
     }
 
 
-    static fromJSON() {
-
+    static from_JSON(jsonStr) {
+        let treeDict = JSON.parse(jsonStr);
+        let rootnode = new VnNode(null, null, null, treeDict);
+        return rootnode;
     }
 
 
