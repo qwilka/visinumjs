@@ -3,8 +3,8 @@
     <head>
     	<title>TESTING vntree.js</title>
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
-		<link rel="stylesheet" href="/libs/jstree.css">
-		<script src="/libs/jstree.js"></script>
+		<link rel="stylesheet" href="/libs/jstree/jstree.css">
+		<script src="/libs/jstree/jstree.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
 
 	</head>
@@ -12,31 +12,31 @@
 		<div id="datatree"></div>
         <script src="vntree.js"></script>
         <script type="module">
-			// let rootnode = new VnNode("root node");
-			// let node1 = new VnNode("node1 level1", rootnode);
-			// let node11 = new VnNode("node11 level2", node1);
-			// let node12 = new VnNode("node12 level2", node1);
-			// let node13 = new VnNode("node13 level2", node1);
-			// let node121 = new VnNode("node121 level3", node12);
-			// let node122 = new VnNode("node122 level3", node12);
-			// let node2 = new VnNode("node2 (level1)", rootnode);
-			// let node21 = new VnNode("node21 (level2)", node2);
-			// let node211 = new VnNode("node211 (level3)", node21);
-			// let node212 = new VnNode("node212 (level3) parentless");
-			// node21.add_child(node212);
-			// node21.add_child(new VnNode("node213 (level3) parentless"));
-			// let node3 = new VnNode("node3 (level1)", rootnode);
+			let rootnode = new VnNode("root node");
+			let node1 = new VnNode("node1 level1", rootnode);
+			let node11 = new VnNode("node11 level2", node1);
+			let node12 = new VnNode("node12 level2", node1);
+			let node13 = new VnNode("node13 level2", node1);
+			let node121 = new VnNode("node121 level3", node12);
+			let node122 = new VnNode("node122 level3", node12);
+			let node2 = new VnNode("node2 (level1)", rootnode);
+			let node21 = new VnNode("node21 (level2)", node2);
+			let node211 = new VnNode("node211 (level3)", node21);
+			let node212 = new VnNode("node212 (level3) parentless");
+			node21.add_child(node212);
+			node21.add_child(new VnNode("node213 (level3) parentless"));
+			let node3 = new VnNode("node3 (level1)", rootnode);
 
-            // //debugger;
+            //debugger;
 			
-			// console.log(rootnode.to_texttree());
+			console.log(rootnode.to_texttree());
 			// //for (let n of rootnode) console.log(n.name);
             // let treeDict = rootnode._to_treedict();
             // debugger;
 
-            let jsonStr = '{"data": {"population": 7762609412, "_vntree": {"name": "The World", "_id": "bfa697c8-ac45-4d60-995d-579489d175df"}}, "childs": [{"data": {"_vntree": {"name": "Europe", "_id": "2d539852-e7a7-4638-8b9f-1e3b214700e3"}}, "childs": [{"data": {"capital": "Brussels", "population": 11515793, "_vntree": {"name": "Belgium", "_id": "b8fe32ff-8530-41e6-8545-895611b64260"}}, "childs": []}, {"data": {"capital": "Athens", "population": 10768477, "_vntree": {"name": "Greece", "_id": "8961914e-3f6a-416b-a497-0df35d46e07f"}}, "childs": []}, {"data": {"_vntree": {"name": "Scandinavia", "_id": "e1f05444-42ce-447d-a71b-885f39a6939e"}}, "childs": [{"data": {"capital": "Copenhagen", "population": 5822763, "_vntree": {"name": "Denmark", "_id": "25615c3b-2152-45a3-8236-fd207a73ff53"}}, "childs": [{"data": {"_vntree": {"name": "Faroe Islands", "_id": "301e8fc5-5e33-4a91-957b-dbfb4a75bc88"}}, "childs": []}, {"data": {"_vntree": {"name": "Greenland", "_id": "2961c99f-0225-4d80-a2e4-23505334c9ed"}}, "childs": []}]}, {"data": {"capital": "Stockholm", "population": 10302984, "_vntree": {"name": "Sweden", "_id": "8e48ec3c-2a67-48d0-a051-b923e60cea99"}}, "childs": []}, {"data": {"capital": "Oslo", "population": 5421241, "_vntree": {"name": "Norway", "_id": "3d53468b-1fff-4638-866a-71dc8a9659d2"}}, "childs": []}]}, {"data": {"capital": "Madrid", "population": 46733038, "_vntree": {"name": "Spain", "_id": "ae2da923-cf3f-469c-a8c8-258cb0827360"}}, "childs": []}]}, {"data": {"_vntree": {"name": "South America", "_id": "482e73bf-4c16-4774-b46f-627e29bc032f"}}, "childs": [{"data": {"capital": "Santiago", "population": 17574003, "_vntree": {"name": "Chile", "_id": "1fc8679c-f57b-4346-a91b-a9cf112f6037"}}, "childs": []}]}]}';
-            let rootnode = VnNode.from_JSON(jsonStr);
-            console.log(rootnode.to_texttree());
+            // let jsonStr = '{"data": {"population": 7762609412, "_vntree": {"name": "The World", "_id": "bfa697c8-ac45-4d60-995d-579489d175df"}}, "childs": [{"data": {"_vntree": {"name": "Europe", "_id": "2d539852-e7a7-4638-8b9f-1e3b214700e3"}}, "childs": [{"data": {"capital": "Brussels", "population": 11515793, "_vntree": {"name": "Belgium", "_id": "b8fe32ff-8530-41e6-8545-895611b64260"}}, "childs": []}, {"data": {"capital": "Athens", "population": 10768477, "_vntree": {"name": "Greece", "_id": "8961914e-3f6a-416b-a497-0df35d46e07f"}}, "childs": []}, {"data": {"_vntree": {"name": "Scandinavia", "_id": "e1f05444-42ce-447d-a71b-885f39a6939e"}}, "childs": [{"data": {"capital": "Copenhagen", "population": 5822763, "_vntree": {"name": "Denmark", "_id": "25615c3b-2152-45a3-8236-fd207a73ff53"}}, "childs": [{"data": {"_vntree": {"name": "Faroe Islands", "_id": "301e8fc5-5e33-4a91-957b-dbfb4a75bc88"}}, "childs": []}, {"data": {"_vntree": {"name": "Greenland", "_id": "2961c99f-0225-4d80-a2e4-23505334c9ed"}}, "childs": []}]}, {"data": {"capital": "Stockholm", "population": 10302984, "_vntree": {"name": "Sweden", "_id": "8e48ec3c-2a67-48d0-a051-b923e60cea99"}}, "childs": []}, {"data": {"capital": "Oslo", "population": 5421241, "_vntree": {"name": "Norway", "_id": "3d53468b-1fff-4638-866a-71dc8a9659d2"}}, "childs": []}]}, {"data": {"capital": "Madrid", "population": 46733038, "_vntree": {"name": "Spain", "_id": "ae2da923-cf3f-469c-a8c8-258cb0827360"}}, "childs": []}]}, {"data": {"_vntree": {"name": "South America", "_id": "482e73bf-4c16-4774-b46f-627e29bc032f"}}, "childs": [{"data": {"capital": "Santiago", "population": 17574003, "_vntree": {"name": "Chile", "_id": "1fc8679c-f57b-4346-a91b-a9cf112f6037"}}, "childs": []}]}]}';
+            // let rootnode = VnNode.from_JSON(jsonStr);
+            // console.log(rootnode.to_texttree());
             //debugger;
 
 			
@@ -56,7 +56,7 @@ const attachDatatree = (treeData=null) => {
     }
     return data;
   }  
-  var instance = new jsTree({}, document.getElementById('datatree'));
+  //var instance = new jsTree({}, document.getElementById('datatree'));
 //   instance
 //       .empty()
 //       .create(dummy(2, 10))
@@ -73,13 +73,14 @@ const attachDatatree = (treeData=null) => {
 //   instance.select(testnode);
 //   instance.redraw();
 //   instance.openAll();
-instance.empty();
-let tree = instance.tree;
-let root = instance.tree.root;
-instance.create({id:rootnode._id, text: rootnode.name});
-instance.redraw();
-instance.openAll();
-debugger;
+
+// instance.empty();
+// let tree = instance.tree;
+// let root = instance.tree.root;
+// instance.create({id:rootnode._id, text: rootnode.name});
+// instance.redraw();
+// instance.openAll();
+// debugger;
 }
 
 attachDatatree();

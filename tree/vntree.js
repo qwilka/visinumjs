@@ -9,6 +9,10 @@ function make_nodeid() {
 }
 
 
+var jstree = new jsTree({}, document.getElementById('datatree'));
+jstree.empty();
+//jstree = null;
+
 class VnNode {
     constructor(name, parent=null, data={}, treedict=null) {
         this.parent = parent;
@@ -64,13 +68,25 @@ class VnNode {
 
         if (name) that.name = name;
         //that.parent = parent;
-        if (parent !== null) {
-            parent.add_child(that)
-        }
+        // if (parent !== null) {
+        //     parent.add_child(that)
+        // }
         if (treedict && treedict.childs.length) {
             for (let child of treedict.childs) {
                 that.add_child(new VnNode(null, null, null, child));
             }
+        } else if (parent !== null) {
+            parent.add_child(that)
+        }
+        if (jstree && that.parent===null && jstree.tree.root.children.length===0) {
+            // let jsparent = null;
+            // if (that.parent) {
+            //     jsparent = jstree.tree.find({id: that.parent._id})[0];
+            // } 
+            jstree.create({id: that._id, text: that.name}, null);
+            jstree.redraw();
+            jstree.openAll();
+            //debugger;
         }
         return that;
     }
@@ -78,6 +94,15 @@ class VnNode {
     add_child (newChild) {
         this.childs.push(newChild)
         newChild.parent = this
+
+        if (jstree) {
+            let jsparent = jstree.tree.find({id: this._id})[0];
+            let idx = jsparent.children.length;
+            jstree.create({id: newChild._id, text: newChild.name}, jsparent, idx);
+            jstree.redraw();
+            jstree.openAll();
+            //debugger;
+        }
     }
 
     *traverse() {

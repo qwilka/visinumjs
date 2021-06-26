@@ -1,6 +1,5 @@
 .vscode/
 node_modules
 build/
-tree/libs/
 tree/*.json
 
