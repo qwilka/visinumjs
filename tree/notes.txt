@@ -16,6 +16,21 @@ https://davidwalsh.name/javascript-functions
 https://stackoverflow.com/questions/31953717/whats-the-purpose-of-returning-a-function-from-a-function
 
 
+UUID
+========
 https://docs.mongodb.com/manual/reference/method/UUID/
 https://www.mongodb.com/blog/post/generating-globally-unique-identifiers-for-use-with-mongodb
 https://en.wikipedia.org/wiki/Universally_unique_identifier
+
+
+File System Access API
+======================
+https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API
+https://web.dev/file-system-access/
+https://github.com/WICG/file-system-access
+https://googlechromelabs.github.io/text-editor/
+https://github.com/GoogleChromeLabs/text-editor/
+https://wicg.github.io/file-system-access/#api-showopenfilepicker
+https://wicg.github.io/file-system-access/#enumdef-wellknowndirectory
+
+
