@@ -1,19 +1,26 @@
 
-// node -i -e "$(< vntree.js)"
-
-function make_nodeid() {
-    // https://github.com/uuidjs/uuid
-    let _nodeid = uuidv4();
-    _nodeid = _nodeid.replace(/-/g, "");
-    return _nodeid;
-}
 
 
-var jstree = new jsTree({}, document.getElementById('datatree'));
-jstree.empty();
-//jstree = null;
 
-let timeout = 100;
+// function make_nodeid() {
+//     // https://github.com/uuidjs/uuid
+//     let _nodeid = uuidv4();
+//     _nodeid = _nodeid.replace(/-/g, "");
+//     return _nodeid;
+// }
+
+// var ttest = typeof window;
+// console.log("typeof window=", ttest);
+// https://github.com/uuidjs/uuid
+if (typeof window === 'undefined') {
+//if(typeof process === 'object') {    
+    //{ v4: uuidv4 } = require('uuid');
+    uuidv4 = require('uuid').v4;
+    console.log("require('uuid')=", uuidv4);
+} 
+//console.log("uuid=", uuidv4());
+
+//let timeout = 100;
 
 class VnNode {
     constructor(name, parent=null, data={}, treedict=null) {
@@ -72,21 +79,6 @@ class VnNode {
         //that.parent = parent;
 
 
-        if (jstree && that.parent===null && jstree.tree.root.children.length===0) {
-            // let jsparent = null;
-            // if (that.parent) {
-            //     jsparent = jstree.tree.find({id: that.parent._id})[0];
-            // } 
-            let node = jstree.parseNode({id: that._id, text: that.name}, null)
-            that.jstree_node = node;
-            console.log("jstree.parseNode ", node)
-            jstree.tree.root.children.push(node)
-            //jstree.create(node, null);
-            // jstree.redraw();
-            // jstree.openAll();
-            //debugger;
-        } 
-
         if (treedict && treedict.childs.length) {
             for (let child of treedict.childs) {
                 //that.add_child(new VnNode(null, null, null, child));
@@ -120,17 +112,6 @@ class VnNode {
     add_child (newChild) {
         this.childs.push(newChild)
         newChild.parent = this
-
-        if (jstree) {
-            let node = jstree.parseNode({id: newChild._id, text: newChild.name}, null);
-            newChild.jstree_node = node;
-            let jsparent = this.jstree_node; // jstree.tree.find({id: this._id})[0];
-            let idx =   jsparent.children.length;
-            jsparent.addChild(node, idx);
-            // jstree.create({id: newChild._id, text: newChild.name}, jsparent, idx);
-            jstree.redraw();
-            jstree.openAll();
-        }
     }
 
     *traverse() {
@@ -142,6 +123,13 @@ class VnNode {
     
     [Symbol.iterator]() {
         return this.traverse();
+    }
+
+
+    get_node_by_id(_id) {
+        for (let _n of this) {
+            if (_n._id === _id) return _n;
+        }
     }
 
 
@@ -179,6 +167,12 @@ class VnNode {
 
 
     static from_JSON(jsonStr) {
+        // let treeDict;
+        // try {
+        //     treeDict = JSON.parse(jsonStr);
+        // } catch {
+        //     treeDict = jsonStr;
+        // }
         let treeDict = JSON.parse(jsonStr);
         let rootnode = new VnNode(null, null, null, treeDict);
         return rootnode;
@@ -189,8 +183,20 @@ class VnNode {
 
 
 
+    
+    
+// if (require.main===module) {
+//     module.exports = VnNode;
+// } else {
+//     export {VnNode};
+// }
+
+if (typeof window === 'undefined') {
+    module.exports = VnNode;
+} else {
+    window.VnNode = VnNode;
+}
+// module.exports = VnNode;
 
 
-//module.exports = VnNode;
-//export {VnNode};
 

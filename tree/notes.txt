@@ -21,6 +21,8 @@ UUID
 https://docs.mongodb.com/manual/reference/method/UUID/
 https://www.mongodb.com/blog/post/generating-globally-unique-identifiers-for-use-with-mongodb
 https://en.wikipedia.org/wiki/Universally_unique_identifier
+https://github.com/thenativeweb/uuidv4  (depreciated)
+https://github.com/uuidjs/uuid
 
 
 File System Access API

@@ -19,6 +19,6 @@ node21.add_child(node212);
 node21.add_child(new VnNode("node213 (level3) parentless"));
 let node3 = new VnNode("node3 (level1)", rootnode);
 
-console.log(rootnode.toTextTree());
+console.log(rootnode.to_texttree());
 for (let n of rootnode) console.log(n.name);
 

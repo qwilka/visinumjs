@@ -6,7 +6,14 @@
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 		<link rel="stylesheet" href="/libs/jstree/jstree.css">
 		<script src="/libs/jstree/jstree.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script> -->
+		<script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
+		<!-- <script type="module">
+			import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
+			//console.log(uuidv4()); // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
+		</script> -->
+
+
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 		<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-indigo.css">
 
@@ -14,16 +21,20 @@
     <body>
 
 
+
 		<div class="w3-panel w3-padding-16 w3-theme-l4">
-			<button class="w3-button w3-theme-d2" onclick="clearTree()">Clear tree</button>
-			<button class="w3-button w3-theme-d2" onclick="importJSON()">Import JSON</button>
-			<button class="w3-button w3-theme-d2">Export JSON</button>
+			<button id="butImport" class="w3-button w3-theme-d2">Import JSON</button>
+			<button id="butExport" class="w3-button w3-theme-d2" disabled>Export JSON</button>
+			<button id="butClear" class="w3-button w3-theme-d2" disabled>Clear tree</button>
 		</div> 
 		
 		<div id="datatree"></div>
-        <script src="vntree.js"></script>
+
+		<!-- <script src="vntree.js"></script> -->
+		<script type="module" src="app.js"></script>
+
         <!-- <script type="module">	 -->
-		<script>
+		<!-- <script>
 			// let rootnode = new VnNode("root node");
 			// let node1 = new VnNode("node1 level1", rootnode);
 			// let node11 = new VnNode("node11 level2", node1);
@@ -188,7 +199,7 @@ function toggleContextMenu(evt) {
 
 datatreeContextmenu();
 
-</script>
+</script> -->
 
 
 
