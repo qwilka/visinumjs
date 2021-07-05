@@ -128,14 +128,69 @@ var clearTree = () => {
 	//jstree.redraw();
 };
 
+
+const datatreeContextmenu = () => {
+  //let contextMenu = new ContextMenu({ commands });
+  jsTree.prototype.context = function (evt) {
+    let node = evt.target;
+    if (Array.isArray(node)) {
+        node.forEach(x => this.select(x));
+        return this;
+    }
+    node = this.node(node);
+    if (node) {
+        this.setState(node, "selected", true);
+    }
+    //contextMenu.open(evt);
+	toggleContextMenu(evt);
+    this.redraw();
+    return this;
+  };
+  //document.getElementById('datatree').addEventListener('contextmenu', function (e) {
+  document.addEventListener('contextmenu', function (e) {
+    //contextMenu.open(e);  
+    e.preventDefault();
+      jsTree.instance(e.target).context(e);
+      //contextMenu.open(e);
+      console.log("contextmenu", e);
+      if (e.target instanceof HTMLElement) {
+    console.log("HTMLElement", e.target);
+    let selected = jsTree.instance(e.target).getSelected()[0];
+    console.log("selected node", selected);
+    //selected.data.text = selected.data.text + "x";
+    };
+  });
+
+}
+
+
+function toggleContextMenu(evt) {
+	console.log("toggleContextMenu(evt)", evt);
+	let node;
+	node = document.getElementById('datatree-context-menu');
+	console.log("document.getElementById('datatree-context-menu')", node);
+	if (node) node.remove();
+	// https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_dropdown_click
+	node = document.createElement('div');
+	node.setAttribute("id", "datatree-context-menu");
+	node.setAttribute("class", "w3-dropdown-content w3-bar-block w3-border w3-show");
+	node.innerHTML = `<a href="#" class="w3-bar-item w3-button">Link 1</a>
+      <a href="#" class="w3-bar-item w3-button">Link 2</a>
+      <a href="#" class="w3-bar-item w3-button">Link 3</a>`
+	  evt.target.appendChild(node);
+//   var x = document.getElementById("Demo");
+//   if (x.className.indexOf("w3-show") == -1) {
+//     x.className += " w3-show";
+//   } else { 
+//     x.className = x.className.replace(" w3-show", "");
+//   }
+}
+
+datatreeContextmenu();
+
 </script>
 
-<!-- 
-<script>
-	var import_JSON = () => {
-		window.showOpenFilePicker();
-	}
-</script> -->
+
 
 </body>
 </html>
