@@ -22,9 +22,9 @@
   "homepage": "https://github.com/qwilka/visinumjs#readme",
   "dependencies": {
     "esm": "^3.2.25",
-    "geodesy": "^2.1.0",
-    "lodash": "^4.17.11",
-    "netcdfjs": "^0.7.0",
-    "rbush": "^3.0.0"
+    "geodesy": "^2.2.1",
+    "lodash": "^4.17.21",
+    "netcdfjs": "^1.0.0",
+    "rbush": "^3.0.1"
   }
 }
