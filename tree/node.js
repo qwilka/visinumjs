@@ -23,15 +23,15 @@ if (typeof window === 'undefined') {
 
 //let timeout = 100;
 
-class EmbedNode {
+class Node {
     constructor(name, parent=null, data={}, treedict=null) {
         this.parent = parent;
-        this.childs = [null];
+        this.childs = [];
         if (treedict) {
             this.data = treedict.data;
             // for (let child of treedict.childs) {
-            //     this.childs.push(new VnNode(null, this, null, child));
-            //     //this.add_child(new VnNode(null, null, null, child));
+            //     this.childs.push(new Node(null, this, null, child));
+            //     //this.add_child(new Node(null, null, null, child));
             // }
         } else {
             this.data = data;
@@ -84,15 +84,30 @@ class EmbedNode {
         if (treedict && treedict.childs.length) {
             for (let child of treedict.childs) {
                 // setTimeout(() => {
-                //     that.add_child(new VnNode(null, null, null, child));
+                //     that.add_child(new Node(null, null, null, child));
                 // }, 1);
-                this.add_child(new VnNode(null, null, null, child));
+                this.add_child(new Node(null, null, null, child));
             }
         } else if (parent !== null) {
             parent.add_child(this)
         }
 
+        // if (parent !== null) {
+        //     parent.add_child(that)
+        // }
 
+
+        // if (jstree && that.parent) {
+        //     let jsparent = jstree.tree.find({id: that.parent._id})[0];
+        //     let idx = jsparent.children.length;
+        //     jstree.create({id: that._id, text: that.name}, jsparent, idx);
+        //     jstree.redraw();
+        //     jstree.openAll();
+        //     //debugger;
+        // }        
+
+
+        // return that;
     }
 
     add_child (newChild) {
@@ -184,7 +199,7 @@ class EmbedNode {
         //     treeDict = jsonStr;
         // }
         let treeDict = JSON.parse(jsonStr);
-        let rootnode = new VnNode(null, null, null, treeDict);
+        let rootnode = new Node(null, null, null, treeDict);
         return rootnode;
     }
 
@@ -196,17 +211,17 @@ class EmbedNode {
     
     
 // if (require.main===module) {
-//     module.exports = VnNode;
+//     module.exports = Node;
 // } else {
-//     export {VnNode};
+//     export {Node};
 // }
 
 if (typeof window === 'undefined') {
-    module.exports = VnNode;
+    module.exports = Node;
 } else {
-    window.VnNode = VnNode;
+    window.Node = Node;
 }
-// module.exports = VnNode;
+// module.exports = Node;
 
 
 

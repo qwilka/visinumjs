@@ -1,6 +1,5 @@
 
-//import {VnNode} from './vntree.js';
-import './vntree.js';
+import './embed_node.js';
 var rootnode;
 var jstree = new jsTree({}, document.getElementById('datatree'));
 jstree.empty();
@@ -8,24 +7,25 @@ jstree.empty();
 
 
 
-rootnode = new VnNode("root node");
-let node1 = new VnNode("node1 level1", rootnode);
-let node11 = new VnNode("node11 level2", node1);
-let node12 = new VnNode("node12 level2", node1);
-let node13 = new VnNode("node13 level2", node1);
-let node121 = new VnNode("node121 level3", node12);
-let node122 = new VnNode("node122 level3", node12);
-let node2 = new VnNode("node2 (level1)", rootnode);
-let node21 = new VnNode("node21 (level2)", node2);
-let node211 = new VnNode("node211 (level3)", node21);
-let node212 = new VnNode("node212 (level3) parentless");
+rootnode = new EmbedNode("root node");
+let node1 = new EmbedNode("node1 level1", rootnode);
+let node11 = new EmbedNode("node11 level2", node1);
+let node12 = new EmbedNode("node12 level2", node1);
+let node13 = new EmbedNode("node13 level2", node1);
+let node121 = new EmbedNode("node121 level3", node12);
+let node122 = new EmbedNode("node122 level3", node12);
+let node2 = new EmbedNode("node2 (level1)", rootnode);
+let node21 = new EmbedNode("node21 (level2)", node2);
+let node211 = new EmbedNode("node211 (level3)", node21);
+let node212 = new EmbedNode("node212 (level3) parentless");
 node21.add_child(node212);
-node21.add_child(new VnNode("node213 (level3) parentless"));
-let node3 = new VnNode("node3 (level1)", rootnode);
+node21.add_child(new EmbedNode("node213 (level3) parentless"));
+let node3 = new EmbedNode("node3 (level1)", rootnode);
 
 console.log(rootnode.to_texttree());
 for (let n of rootnode) console.log(n.name);
 
+window.rootnode = rootnode;
 
 
 
@@ -39,7 +39,7 @@ const importJSON = async (filepath=null, startIn="documents") => {
         let file = await fileHandle.getFile();
         jsonStr = await file.text();
     }
-    rootnode = VnNode.from_JSON(jsonStr);  // rootnode is global
+    rootnode = EmbedNode.from_JSON(jsonStr);  // rootnode is global
 
 
     
@@ -80,8 +80,8 @@ const clearTree = () => {
 //     let _id = jstreeNode.data.id;
 //     console.log("editNodeName jstreeNode", jstreeNode.data.text, _id);
 //     console.log("rootnode=", rootnode);
-//     let vnnode = rootnode.get_node_by_id(_id);
-//     console.log("editNodeName vnnode", vnnode);
+//     let EmbedNode = rootnode.get_node_by_id(_id);
+//     console.log("editNodeName EmbedNode", EmbedNode);
     
 // };    
 
