@@ -1,6 +1,7 @@
 
 const _ = require('lodash');
 const uuidv4 = require('uuid').v4;
+const objectScan = require('object-scan'); // https://github.com/blackflux/object-scan
 
 
 class VnNode {
@@ -31,11 +32,13 @@ class VnNode {
 
 
         if (treedict && treedict.childs.length) {
+            this.#childs = [];
             for (let child of treedict.childs) {
-                // setTimeout(() => {
-                //     that.add_child(new VnNode(null, null, null, child));
-                // }, 1);
-                this.add_child(new VnNode(null, null, null, child));
+                if (_.isNull(child)) {
+                    this.#childs.push(null);
+                } else {
+                    this.add_child(new VnNode(null, null, null, child));
+                }
             }
         } else if (parent !== null) {
             parent.add_child(this)
@@ -73,6 +76,14 @@ class VnNode {
             if (named.length > 1) return named;
         }
         return null;
+    }
+
+    get_root() {
+        let n = this;
+        while (n.parent) {
+            n = n.parent
+        }
+        return n;
     }
 
     get_data(path=null, ascend=true) {
@@ -171,6 +182,34 @@ class VnNode {
         let rootnode = new VnNode(null, null, null, treeDict);
         return rootnode;
     }
+
+    clone(change_id=true) {
+        //let newtree = _.cloneDeep(this);
+        let jstr = this.to_JSON();
+        let newtree = VnNode.from_JSON(jstr);
+        // if (change_id) {
+        //     for (let n of newtree) {
+        //         n.#data._vntree._id = uuidv4();
+        //     }
+        // }
+        return newtree;
+    }
+
+    rekey() {
+        let scanner = objectScan(['**'], { joined: false, rtn:"key" , filterFn: ({value, context}) => value===context});
+        for (let n of this) {
+            let old_id = n._id;
+            let new_id = uuidv4();
+            n.#data._vntree._id = new_id;
+            for (let sn of this) {
+                let idrefpaths = scanner(sn.get_data(), old_id);
+                for (let path of idrefpaths) {
+                    sn.set_data(path, new_id);
+                }
+            }
+        }
+
+    } 
 
 
 }

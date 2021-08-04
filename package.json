@@ -25,6 +25,7 @@
     "geodesy": "^2.2.1",
     "lodash": "^4.17.21",
     "netcdfjs": "^1.0.0",
+    "object-scan": "^16.0.3",
     "rbush": "^3.0.1"
   }
 }

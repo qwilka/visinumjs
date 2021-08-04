@@ -36,3 +36,11 @@ https://wicg.github.io/file-system-access/#api-showopenfilepicker
 https://wicg.github.io/file-system-access/#enumdef-wellknowndirectory
 
 
+
+https://attacomsian.com/blog/javascript-iterate-objects
+https://github.com/lodash/lodash/issues/2240  Flatten object to paths [feature request] 
+https://github.com/lodash/lodash/issues/1637  .get nested object with dot in key
+https://github.com/hughsk/flat
+https://github.com/blackflux/object-scan#readme
+https://github.com/blackflux/object-scan/issues/1460   Searching within Array of Objects
+https://qwtel.com/posts/software/async-constructor-pattern/
