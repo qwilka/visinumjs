@@ -44,3 +44,8 @@ https://github.com/hughsk/flat
 https://github.com/blackflux/object-scan#readme
 https://github.com/blackflux/object-scan/issues/1460   Searching within Array of Objects
 https://qwtel.com/posts/software/async-constructor-pattern/
+https://github.com/gustavohenke/toposort
+
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields
+https://github.com/tc39/proposal-private-methods

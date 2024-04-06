@@ -1,0 +1,26 @@
+
+
+https://hackernoon.com/the-javascript-developers-guide-to-graphs-and-detecting-cycles-in-them-96f4f619d563  2018
+
+
+
+cytoscape
+=========
+https://js.cytoscape.org/
+https://github.com/cytoscape/cytoscape.js
+https://github.com/cytoscape/cytoscape.js-dagre
+https://github.com/cytoscape/ipycytoscape
+
+
+graph modules
+===============
+https://github.com/fkling/JSNetworkX
+https://dagrejs.github.io
+https://visjs.github.io/vis-network/docs/network/index.html
+https://www.graphdracula.net/
+https://github.com/strathausen/dracula
+https://github.com/yahoo/graphkit
+https://github.com/pygraphkit/graphtik
+
+
+https://stackoverflow.com/questions/4555932/public-or-private-attribute-in-python-what-is-the-best-way
