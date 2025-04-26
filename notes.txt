@@ -17,3 +17,7 @@ https://github.com/aureooms/js-itertools/  Python's iterable and iterator librar
 
 /home/develop/engineering/src/scratch/2017-visinum-desktop-noreact/data-manager/metadata
 /home/develop/engineering/src/scratch/2017-visinum-desktop-noreact/code_trial
+
+
+
+https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore
