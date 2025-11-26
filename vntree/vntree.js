@@ -13,7 +13,7 @@ export class VnNode {
     #childs;
     #data;
 
-    constructor(name=null, parent=null, data=null, treedict=null, id=null) {
+    constructor(name=null, parent=null, data=null, treedict=null, _id=null) {
         this.parent = parent;
         this.#childs = [];
 
@@ -31,7 +31,9 @@ export class VnNode {
             this.#data._vntree = {};
         }
         if (name) this.name = name;
-        this.id = id;
+        if (!this.#data._vntree.hasOwnProperty("_id")) {
+          this._id = _id;
+        }
         this.layer = null; // group layer is null
 
         if (parent !== null) parent.add_child(this);
@@ -46,44 +48,16 @@ export class VnNode {
         this.#data._vntree.name = name;
     }
 
-    get id() {
-        return this.#data._vntree.id;
+
+
+
+
+    get _id() {
+        return this.#data._vntree._id;
     }
 
-    get title() {
-        return this.#data.title || this.name || this.id || "no title";
-    }
-
-    set id(id=null) {
-        this.#data._vntree.id = id || crypto.randomUUID();
-    }
-
-    get options() {
-        return this.#data.options;
-    }
-
-    get url() {
-        return this.#data.url;
-    }
-
-    get type() {
-        return this.#data.type;
-    }
-
-    get selected() {
-        return this.#data.selected;
-    }
-
-    get style() {
-        return this.#data.style;
-    }
-
-    get layer() {
-        return this.#data.layer;
-    }
-
-    set layer(obj) {
-        this.#data.layer = obj;
+    set _id(_id=null) {
+        this.#data._vntree._id = _id || crypto.randomUUID();
     }
 
 
@@ -210,21 +184,6 @@ export class VnNode {
         return treeDict;
     }
 
-    // to_layerTreeObj() {
-    //     let layerTreeObj = {};
-    //     layerTreeObj.label = this.get_data("title") || this.name;
-    //     if (this.layer) {
-    //         layerTreeObj.layer = this.layer;
-    //     } else {
-    //         layerTreeObj.children = [];
-    //     }
-    //     for (let child of this.#childs) {
-    //         if (child.get_data('deactivate')) continue;
-    //         layerTreeObj.children.push(child.to_layerTreeObj());
-    //     }
-    //     return layerTreeObj;
-    // }
-
 
 
     to_JSON() {
@@ -243,31 +202,5 @@ export class VnNode {
 
 }
 
-export function makeLayersTree(layers) {
-    const layersTree = new VnNode("root", null, null, null, "root");
-    // const basemaps = new VnNode("basemaps", layersTree, {"title": '<font size="3">Base maps &#x1F30D;</font>', "type":"base", "type-layer": "group"}, null, "basemaps");
-    // const overlays = new VnNode("overlays", layersTree, {"title":"Overlays"}, null, "overlays"); 
-    for (let layer of layers) {
-        // if (layer.deactivate) {
-        //     console.warn(`makeLayerTree: Skipping deactivated layer ${layer.name}`);
-        //     continue;
-        // }
-        let parent = layer.parent || "overlays";
-        let parentNode = layersTree.get_node_by_id(parent);
-        if (!parentNode) {
-            console.warn(`makeLayerTree: Parent node ${parent} not found for layer ${layer.name}`);
-            continue;
-        }
-        let newNode = new VnNode(layer.name, parentNode, layer, null, layer.id || crypto.randomUUID());
-    }
-    //console.log(layersTree.to_texttree());
-    return layersTree;
-}
 
-
-
-// Create the root node and the base maps and overlays nodes
-
-
-// export {VnNode, layersTree};
 

@@ -1,6 +1,7 @@
 // node -i -e "$(< test_node.js)"
 // node -r esm test_node.js
 // deno --allow-read test_deno.js
+// deno repl --allow-read --eval-file=test_deno.js
 
 //const fs = require("fs");
 //import * as fs from "node:fs";
@@ -11,6 +12,7 @@ import {readFileSync} from "node:fs";
 import {VnNode as Node}  from './vntree.js';
 
 let rootnode, choice = "theworld.json"; // "theworld.json"
+//choice = "";
 
 switch (choice) {
     case "theworld.json":
