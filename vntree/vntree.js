@@ -198,6 +198,34 @@ export class VnNode {
         return rootnode;
     }
 
+    clone(clone_ids=false) {
+        //let newtree = _.cloneDeep(this);
+        let jstr = this.to_JSON();
+        let newtree = VnNode.from_JSON(jstr);
+        if (!clone_ids) {
+            for (let n of newtree) {
+                n._id = null;
+            }
+        }
+        return newtree;
+    }
+
+    // rekey() {
+    //     // https://github.com/blackflux/object-scan
+    //     let scanner = objectScan(['**'], { joined: false, rtn:"key" , filterFn: ({value, context}) => value===context});
+    //     for (let n of this) {
+    //         let old_id = n._id;
+    //         let new_id = uuidv4();
+    //         n.#data._vntree._id = new_id;
+    //         for (let sn of this) {
+    //             let idrefpaths = scanner(sn.get_data(), old_id);
+    //             for (let path of idrefpaths) {
+    //                 sn.set_data(path, new_id);
+    //             }
+    //         }
+    //     }
+    // } 
+
 
 
 }

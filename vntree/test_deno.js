@@ -41,6 +41,7 @@ switch (choice) {
 
 
 console.log(rootnode.to_texttree());
-for (let n of rootnode) console.log(n.name);
+let tree2 = rootnode.clone();
+for (let n of tree2) console.log(n.name);
 
 
